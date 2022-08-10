@@ -140,7 +140,9 @@ write.tabular = function( data, filename, sep, row.names = TRUE ){
     name = data$which[[1]]
     which = data$which[[2]]
     metadata = data$metadata
-    suffix = suffixes[ sep ]
+    if ( sep == "t" ){ sep = "\t" } # just in case the backslash gets lost somewhere along the way...
+    suffix = suffixes[[ sep ]]
+    
 
     # now write the tables
     data_file = paste0( filename, ".", name, ".", suffix )
@@ -165,11 +167,14 @@ main = function() {
     args = get_args()
 
     log_info( paste( "Reading RDS file:", args$input ) )
-    data = readRDS( args$input )
+    obj = readRDS( args$input )
 
     # get the data from the Seurat object
     log_info( paste( "Extracting data from Seurat object..." ) )
-    data = get.from.seurat( data, which = args$data, metadata = args$metadata )
+    data = get.from.seurat( obj, which = args$data, metadata = args$metadata )
+
+    # clear the object to save memory
+    rm( obj )
 
     # write the data to a table
     if (is.null( args$output )) {

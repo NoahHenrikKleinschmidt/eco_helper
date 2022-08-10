@@ -9,13 +9,18 @@ supported_formats = ( "rds", "seurat" )
 The supported formats (i.e. file suffixes) to interpret as storing a SeuratObject.
 """
 
+default_metadata = [ "meta.data" ]
+"""
+The default metadata to extract from a SeuratObject.
+"""
+
 def to_tabular( 
                             filename : str, 
                             output : str, 
                             sep : str, 
                             which : str, 
                             metadata : list, 
-                            index : str ):
+                            index : bool ):
     """
     Convert a Seurat object to tabular file(s) for the extracted data and any additional metadata.
     
@@ -32,9 +37,14 @@ def to_tabular(
         The data to extract from the SeuratObject. This can be any slot that is accessible via `GetAssayData` from the SeuratObject.
     metadata : list
         The metadata to extract from the SeuratObject. This can be any number slots or attributes that is accessible from SeuratObject.
+    index : bool
+        Whether to include the index in the output of metadata files.
     """
     seurat_conversion_script = os.path.abspath( os.path.dirname( __file__ ) ) 
     seurat_conversion_script = os.path.join( seurat_conversion_script, "_seurat_rds_to_tabular.R" )
+
     metadata = " ".join( metadata )
-    cmd = f"Rscript {seurat_conversion_script} --output {output} --separator {sep} --data {which} --metadata {metadata} --index {index} {filename}"
+    index = f"-i " if index else ""
+    
+    cmd = f"Rscript {seurat_conversion_script} {filename} --output {output} --separator {sep} {index}--data {which} --metadata {metadata}"
     tfuncs.run( cmd )

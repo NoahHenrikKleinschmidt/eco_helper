@@ -33,6 +33,10 @@ def from_seurat_to_tabular(
     index : bool
         Whether to include the index in the output of metadata files.
     """
+    if metadata is None:
+        metadata = seurat.default_metadata
+    if isinstance( metadata, str ): 
+        metadata = [ metadata ]
     seurat.to_tabular( filename, output, sep, which, metadata, index )
 
 

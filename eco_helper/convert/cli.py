@@ -18,7 +18,7 @@ def setup_parser( parent ):
     convert.add_argument( "--to", dest = "fmt_out", help = "The output format in case it is not evident from the output file suffix.", default = None )
     convert.add_argument( "-i", "--index", help = "Use this to also save the index (rownames) to tabular output files. By default the index will NOT be written to the output files. In case of SeuratObject data this option only applies to metadata tables. The extracted data will **always** have an index.", action = "store_true", default = False )
     convert.add_argument( "-d", "--data", help = "[Used only for Seurat-RDS] The data to extract from the SeuratObject. If not specified, by default the 'counts' slot will be extracted.", default = None )
-    convert.add_argument( "-m", "--metadata", help = "[Used only for Seurat-RDS] The metadata to extract from the SeuratObject. This may be any number accessible slots or attributes of the SeuratObject. If not specified, by default a 'meta.data' attribute is tried to be extracted.", default = None )
+    convert.add_argument( "-m", "--metadata", nargs = "+", help = "[Used only for Seurat-RDS] The metadata to extract from the SeuratObject. This may be any number accessible slots or attributes of the SeuratObject. If not specified, by default a 'meta.data' attribute is tried to be extracted.", default = None )
     convert.set_defaults( func=convert_func )
 
 
@@ -78,7 +78,6 @@ def convert_func( args ):
     
     fmt_in, fmt_out = _prep_formats(input, output, fmt_in, fmt_out)
 
-    print( output )
     # now the actual conversion
 
     if fmt_in in tabular.supported_formats:
@@ -102,8 +101,6 @@ def convert_func( args ):
             raise ValueError(f"Cannot convert from {fmt_in} to {fmt_out}")
     
     elif fmt_in in seurat.supported_formats:
-        if metadata is None:
-            metadata = "meta.data"
         if fmt_out in tabular.supported_formats:
             sep_out = tabular.separators[fmt_out]
             funcs.from_seurat_to_tabular( input, output, sep_out, data, metadata, index )
