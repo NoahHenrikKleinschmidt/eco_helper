@@ -13,7 +13,7 @@ def setup_parser( parent ):
     convert = parent.add_parser( "convert", description=descr )
     convert.add_argument( "input", help = "Input file." )
     convert.add_argument( "-o", "--output", help = "Output file. By default the same as the input with altered suffix.", default = None )
-    convert.add_argument( "-r", "--recursive", action = "store_true", help = "Use this to mark the output as a directory rather than a target output file.", default = False )
+    convert.add_argument( "-r", "--recursive", action = "store_true", help = "Use this to mark the output as a directory rather than a target output file", default = False )
     convert.add_argument( "--from", dest = "fmt_in", help = "The input format in case it is not evident from the input file suffix.", default = None )
     convert.add_argument( "--to", dest = "fmt_out", help = "The output format in case it is not evident from the output file suffix.", default = None )
     convert.add_argument( "-i", "--index", help = "Use this to also save the index (rownames) to tabular output files. By default the index will NOT be written to the output files. In case of SeuratObject data this option only applies to metadata tables. The extracted data will **always** have an index.", action = "store_true", default = False )
@@ -77,7 +77,7 @@ def convert_func( args ):
         output = os.path.abspath( output ) 
     
     fmt_in, fmt_out = _prep_formats(input, output, fmt_in, fmt_out)
-
+    
     print( output )
     # now the actual conversion
 
