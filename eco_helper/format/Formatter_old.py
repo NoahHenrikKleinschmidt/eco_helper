@@ -2,6 +2,10 @@
 The main class that handles re-formatting input datafile index, columns, and headers.
 """
 
+# NOTE: This is the old Formatter from fix_annotations that was specifically designed to reformat annotation and expression matrix files for EcoTyper exclusively.
+#       It is not designed to be used for other purposes. The new version in Formatter.py is more general but does no longer support reading files from directories...
+#       Also the new version is trimmed for regex substitutions which this is not...
+
 import os
 import pandas as pd
 import logging
