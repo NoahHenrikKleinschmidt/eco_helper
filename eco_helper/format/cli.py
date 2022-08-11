@@ -24,7 +24,7 @@ def setup_parser( parent ):
     parser.add_argument( "-n", "--names", help = "Use this if the column names (headers) should be re-formatted.", action = "store_true" )
     parser.add_argument( "-c", "--columns", nargs = "+", help = "Specify any number of columns within the annotation file to reformat values in.", default = None )
     parser.add_argument( "-p", "--pseudo", help = "Use this to only pseudo-read the given file. This is useful when the datafiles are very large to save memory.", action = "store_true", default = False )
-    parser.add_argument( "-sep", "--separator", help = "Use this to specify the separator to use when reading the file. By default, the separator is guessed from the file extension. Otherwise `tsv` (for tab), `csv` (for comma), or `txt` (for space)  can be specified.", default = None )
+    parser.add_argument( "-sep", "--separator", help = "Use this to specify the separator to use when reading the file. By default, the separator is guessed from the file extension. Otherwise `tsv` (for tab), `csv` (for comma), or `txt` (for space)  can be specified.", choices = ["tsv", "csv", "txt"], default = None )
 
     parser.add_argument( "-e", "--expression", help = "A preset for expression matrices equivalent to '--index --names --pseudo' ", action = "store_true" )
     parser.add_argument( "-ee", "--ecoexpression", help = "A preset for EcoTyper expression matrices equivalent to '--index --names --pseudo --format EcoTyper' ", action = "store_true" )
