@@ -46,5 +46,5 @@ def to_tabular(
     metadata = " ".join( metadata )
     index = f"-i " if index else ""
     
-    cmd = f"Rscript {seurat_conversion_script} {filename} --output {output} --separator {sep} {index}--data {which} --metadata {metadata}"
+    cmd = f"Rscript {seurat_conversion_script} {filename} --output {output} --separator '{sep}' {index}--data {which} --metadata {metadata}"
     tfuncs.run( cmd )
