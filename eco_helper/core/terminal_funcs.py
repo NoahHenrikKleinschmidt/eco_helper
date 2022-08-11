@@ -5,7 +5,7 @@ The core functions of eco_helper that work with the terminal and running subproc
 import os
 import sys
 import subprocess
-from . import TerminalOutput
+from .TerminalOutput import TerminalOutput
 
 
 def run( cmd : str ): 
