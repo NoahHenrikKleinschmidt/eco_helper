@@ -11,6 +11,7 @@ from . import TerminalOutput
 def run( cmd : str ): 
     """
     Run a command in the terminal without catching any outputs.
+    Note, this will run in `shell=True`.
     
     Parameters
     ----------
@@ -35,7 +36,7 @@ def from_terminal( cmd : str ) -> TerminalOutput:
     """
     return TerminalOutput( subprocess.run( cmd, shell = True, capture_output = True ) )
 
-def stdout( cmd : str ) -> str : 
+def stdout( cmd : str, file : str = None ) -> str : 
     """
     Run a command in the terminal and return the stdout.
     
@@ -43,15 +44,20 @@ def stdout( cmd : str ) -> str :
     ----------
     cmd : str
         The command to run.
-
+    file : str
+        A file to write the stdout to. Note this will **overwrite** any previously existing file of the same name!
     Returns
     -------
     str
         The stdout of the command.
     """
-    return from_terminal( cmd ).stdout
+    out = from_terminal( cmd ).stdout
+    if file :
+        with open( file, "w" ) as f:
+            f.write( out )
+    return out
 
-def stderr( cmd : str ) -> str :
+def stderr( cmd : str, file : str = None ) -> str :
     """
     Run a command in the terminal and return the stderr.
     
@@ -65,7 +71,11 @@ def stderr( cmd : str ) -> str :
     str
         The stderr of the command.
     """
-    return from_terminal( cmd ).stderr
+    err = from_terminal( cmd ).stderr
+    if file :
+        with open( file, "w" ) as f:
+            f.write( err )
+    return err
 
 def returncode( cmd : str ) -> int :
     """
@@ -82,3 +92,4 @@ def returncode( cmd : str ) -> int :
         The returncode of the command.
     """
     return from_terminal( cmd ).returncode
+
