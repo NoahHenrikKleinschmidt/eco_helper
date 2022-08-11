@@ -1,3 +1,0 @@
-[console_scripts]
-eco_helper = eco_helper.cli:main
-
