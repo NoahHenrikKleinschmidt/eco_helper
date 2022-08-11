@@ -18,7 +18,7 @@ def run( cmd : str ):
     cmd : str
         The command to run.
     """
-    subprocess.run( cmd, shell = True )
+    subprocess.run( cmd, shell = True, executable = bash() )
 
 def from_terminal( cmd : str ) -> TerminalOutput:
     """
@@ -34,7 +34,7 @@ def from_terminal( cmd : str ) -> TerminalOutput:
     TerminalOutput
         The output of the command. Which stores the stdout, stderr, and returncode.
     """
-    return TerminalOutput( subprocess.run( cmd, shell = True, capture_output = True ) )
+    return TerminalOutput( subprocess.run( cmd, shell = True, capture_output = True, executable = bash() ) )
 
 def stdout( cmd : str, file : str = None ) -> str : 
     """
@@ -93,3 +93,14 @@ def returncode( cmd : str ) -> int :
     """
     return from_terminal( cmd ).returncode
 
+
+def bash():
+    """
+    Get the current bash executable.
+    
+    Returns
+    -------
+    str
+        The path to the bash executable.
+    """
+    return subprocess.run( "which bash", capture_output = True, shell = True ).stdout.decode().strip()
