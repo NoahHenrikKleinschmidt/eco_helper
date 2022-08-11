@@ -131,14 +131,15 @@ class PseudoDataFrame:
         """
 
         # first assemble the full column
-        index_col = "\\n".join( self.index )
+        index_col = "\n".join( self.index )
         if self.index.name is not None:
-            index_col = f"{self.index.name}\\n{index_col}"
+            index_col = f"{self.index.name}\n{index_col}"
         
         # save the index col to another tmpfile
         index_file = f"{filename}.index_column"
         # subprocess.run( f"printf '{index_col}' > { index_file }", shell=True )
-        tfuncs.run( f"printf '{index_col}' > { index_file }" )
+        with open( index_file, "w" ) as f:
+            f.write( index_col )
 
         # and now paste the file and new index together and remove the tmpfiles...
         cmd = f"""( paste <( cut -f 1 '{index_file}' ) <( cut -f 2- '{filename}' ) ) ; rm {index_file} ; rm {filename}"""
