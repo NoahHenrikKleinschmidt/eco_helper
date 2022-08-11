@@ -9,7 +9,7 @@ import glob
 from alive_progress import alive_bar
 
 import eco_helper.format.formats as formats
-import eco_helper.format.Pseudo as pseudo
+import eco_helper.format.Pseudo as Pseudo
 import eco_helper.convert.tabular as tabular
 import eco_helper.convert as convert
 
@@ -65,7 +65,7 @@ class Formatter:
         self._read_sep = sep 
 
         if pseudo:
-            self._df = pseudo.PseudoDataFrame( filename, sep = sep, **kwargs )
+            self._df = Pseudo.PseudoDataFrame( filename, sep = sep, **kwargs )
         else:
             self._df = pd.read_csv( filename, sep = sep, skipinitialspace = True, quotechar = '"', engine = "python", **kwargs )
 
