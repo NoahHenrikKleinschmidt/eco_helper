@@ -16,7 +16,7 @@ The supported tabular data formats (file suffixes).
 
 separators = {
                 "csv" : ",",
-                "tsv" : "\\t",
+                "tsv" : "\t",
                 "txt" : " "
             }
 """
