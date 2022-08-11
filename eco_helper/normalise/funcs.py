@@ -1,12 +1,10 @@
 """
 Core functions of the normalise submodule.
 """
-import subprocess
 import pandas as pd
 import numpy as np
 import re
 from alive_progress import alive_bar
-import logging
 
 import eco_helper.core.terminal_funcs as tfuncs
 
