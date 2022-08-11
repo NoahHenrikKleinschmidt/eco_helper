@@ -5,6 +5,7 @@ The top-level main command line interface.
 import argparse
 import eco_helper.convert.cli as convert
 import eco_helper.format.cli as format
+import eco_helper.normalise.cli as normalise
 
 def setup_parser():
 
@@ -22,7 +23,7 @@ A command-line toolbox for data pre-processing streamlined to work with the EcoT
     command = parser.add_subparsers( dest = "command" )
     convert.setup_parser( command )
     format.setup_parser( command )
-    
+    normalise.setup_parser( command )
     return parser
 
 
