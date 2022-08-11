@@ -63,7 +63,7 @@ def convert_func( args ):
         raise FileNotFoundError( "Cannot create non-specified output directory" )
 
     elif fmt_out is None and not make_dir:
-        fmt_out,loc = _suffix( output )
+        fmt_out,loc = funcs.filesuffix( output )
         if loc == -1:
             raise ValueError( "No output format specified and no output file suffix found in output file name." )
 
@@ -112,9 +112,9 @@ def _prep_formats(input, output, fmt_in, fmt_out):
     Prepares the input and output formats.
     """
     if fmt_in is None:
-        fmt_in,_ = _suffix( input )
+        fmt_in,_ = funcs.filesuffix( input )
     if fmt_out is None:
-        fmt_out,_ = _suffix( output )
+        fmt_out,_ = funcs.filesuffix( output )
 
     fmt_in = fmt_in.lower()
     fmt_out = fmt_out.lower()
@@ -128,9 +128,3 @@ def _assemble_outfile_name(input, fmt_out):
     # we crop the filename there and add the new file suffix.
     return input[ : input.rfind( "." ) ] + f".{fmt_out}"
 
-def _suffix( filename ) -> str: 
-    """
-    Returns the suffix of the filename and a location of the delimiting dot. This will be -1 if NO dots were found! (Error indication)
-    """
-    loc = filename.rfind( "." )
-    return filename[ loc + 1 : ], loc

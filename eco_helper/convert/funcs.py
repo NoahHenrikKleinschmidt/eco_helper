@@ -100,3 +100,23 @@ def between_tabulars( filename : str, output : str, sep_in : str, sep_out : str,
     index = kwargs.pop( "index", False )
     data = tabular.read( filename, sep_in, **kwargs )
     tabular.write( data, output, sep_out, index = index, **kwargs )
+
+
+def filesuffix( filename ): 
+    """
+    Returns the suffix of the filename and a location of the delimiting dot. This will be -1 if NO dots were found! (Error indication)
+
+    Parameters
+    ----------
+    filename : str  
+        The name of the file. 
+
+    Returns
+    -------
+    str
+        The suffix of the file. Or the full filename if no dots were found to delimit a suffix.
+    int
+        The location of the dot in the filename. -1 if no dot was found.
+    """
+    loc = filename.rfind( "." )
+    return filename[ loc + 1 : ], loc
