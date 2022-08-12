@@ -1,5 +1,6 @@
 """
 A class to read raw counts data from an expression matrix file and normalise the data.
+This is the main class of the ``eco_helper normalise`` command that will be called by the CLI.
 """
 
 import pandas as pd

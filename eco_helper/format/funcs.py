@@ -1,5 +1,5 @@
 """
-The core functions to reformat datafiles.
+These are core functions to reformat datafiles.
 """
 
 def read_formats_file( filename : str ) -> dict:

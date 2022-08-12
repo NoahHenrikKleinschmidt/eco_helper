@@ -1,5 +1,5 @@
 """
-Pre-defined substitution formats
+Pre-defined substitution formats.
 """
 
 EcoTyper = {

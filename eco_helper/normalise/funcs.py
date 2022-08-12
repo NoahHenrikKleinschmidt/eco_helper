@@ -1,6 +1,7 @@
 """
-Core functions of the normalise submodule.
+These are core functions of the normalise submodule.
 """
+
 import pandas as pd
 import numpy as np
 import re

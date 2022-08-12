@@ -1,4 +1,6 @@
 # This script allows to read an RDS file and convert it to TSV format.
+# It is the core behind the eco_helper convert command for seurat RDS files.
+# However, it can also be used stand-alone.
 
 library( logger )
 library( argparse )

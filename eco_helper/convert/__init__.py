@@ -1,23 +1,34 @@
 """
-Using the `convert` subcommand, this module provides the functionality to convert data from one format to another.
+.. _convert:
+
+The `convert` submodule provides the functionality to convert data from one format to another.
+It is the basis of the `eco_helper convert` command.
 
 Specifically, suported conversions are: 
 
-| from               | to      | backwards |
-| ------------------ | ------- | --------- |
++--------------------+---------+-----------+
+|        from        |   to    | backwards |
++====================+=========+===========+
 | tabular            | tabular | yes       |
++--------------------+---------+-----------+
 | MTX                | tabular | yes       |
++--------------------+---------+-----------+
 | RDS (SeuratObject) | tabular | no        |
++--------------------+---------+-----------+
 
     The backward column indicates whether the conversion is possible in both directions.
 
-The tabular data formats supported are:
+The `tabular` data formats supported are:
 
++--------+-----------+
 | format | separator |
-| ------ | --------- |
-| csv    |           |
++========+===========+
+| csv    | ,         |
++--------+-----------+
 | tsv    | <tab>     |
++--------+-----------+
 | txt    | <space>   |
++--------+-----------+
 
 Usage
 =====
@@ -29,6 +40,8 @@ Usage
 
 Full CLI
 ========
+
+The full command line with all options for `eco_helper convert` is as follows:
 
 .. code-block:: bash
 

@@ -1,5 +1,11 @@
 """
-Defines wrapper functions to call the `_seurat_rds_to_tabular.R` script.
+Defines wrapper functions to call the `_seurat_rds_to_tabular.R` script, 
+to read from an RDS file storing `SeuratObject` and to write to tabular files of the data and metadata.
+
+Note
+----
+While this module allows CLI use of the udnerlying Rscript, the Rscript itself also has a 
+fully implemented CLI and can thus also be used as a stand-alone if desired.
 """
 import os
 import eco_helper.core.terminal_funcs as tfuncs

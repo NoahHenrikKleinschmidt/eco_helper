@@ -1,5 +1,5 @@
 """
-Classes to pseudo-read large data files only by their first column (index) and their first line (column headers).
+These are classes to pseudo-read large data files only by their first column (index) and their first line (column headers).
 These classes are intended to work with the core `Formatter` class and imitate the file reading and workflow of a real pandas dataframe, without actually reading or storing data.
 """
 
@@ -9,7 +9,7 @@ import eco_helper.core.terminal_funcs as tfuncs
 class Pseudo( pd.Series ):
     """
     A class to imitate the dataframe columns and indices.
-    It is just pd.Series but giving them extra names will make the 
+    It is just a pd.Series but giving them extra names will make the 
     code easier to understand...
     """
     def __init__( self, data : list, name : str ):
@@ -22,10 +22,30 @@ class Pseudo( pd.Series ):
         return super().__str__()
         
 class PseudoIndex( Pseudo ):
+    """
+    A pseudo-index class to imitate the dataframe index.
+
+    Parameters
+    ----------
+    values : iterable
+        The values of the index.
+    name : str
+        The name of the index.
+    """
     def __init__( self, values, name ):
         super().__init__( data = values, name = name )
 
 class PseudoColumns( Pseudo ):
+    """
+    A pseudo-columns class to imitate the dataframe columns.
+
+    Parameters
+    ----------
+    values : iterable
+        The names of the columns.
+    name : str
+        The name of the underlying pandas Series (not used).
+    """
     def __init__( self, values, name ):
         super().__init__( data = values, name = name )
 
@@ -124,6 +144,15 @@ class PseudoDataFrame:
         self._write_columns(tmpfile, sep)
         self._write_index(tmpfile)
 
+    def replace_delims(self):
+        """
+        Removes any whitespace characters used for delimintation
+        from the index and columns.
+        """
+        to_remove = ( "\n", "\t" )
+        for i in to_remove:
+            self.index = self.index.str.replace( i, "" )
+            self.columns = self.columns.str.replace( i, "" )
 
     def _write_index(self, filename):
         """
@@ -181,6 +210,7 @@ class PseudoDataFrame:
             # since the file option of tfuncs.stdout would overwrite the contents, we do this instead...
             f.write( tfuncs.stdout( f"""( tail -n +2 "{self.src}" ) """ ) ) 
 
+
     # this was part of the original stand-alone but should not be necessary anymore...
     # def _get_bash(self):
     #     """
@@ -188,16 +218,6 @@ class PseudoDataFrame:
     #     """
     #     bash = subprocess.run( "which bash", shell = True, capture_output = True ).stdout.decode( "utf-8" ).strip()
     #     return bash
-
-    def replace_delims(self):
-        """
-        Removes any whitespace characters used for delimintation
-        from the index and columns.
-        """
-        to_remove = ( "\n", "\t" )
-        for i in to_remove:
-            self.index = self.index.str.replace( i, "" )
-            self.columns = self.columns.str.replace( i, "" )
-
+    
     def __repr__(self):
         return f"PseudoDataFrame({self.columns}, {self.index})"

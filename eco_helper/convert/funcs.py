@@ -1,5 +1,5 @@
 """
-The main conversion functions of eco_helper.
+These are the main conversion functions that are used by ``eco_helper convert``.
 """
 
 import eco_helper.convert.mtx as mtx

@@ -1,5 +1,8 @@
 """
-Using the `format` subcommand, this module provides the functionality to re-format data columns and/or rows by regex-based substitutions.
+.. _format:
+
+This module provides the functionality to re-format data columns and/or rows by regex-based substitutions.
+It is the core of the ``eco_helper format`` command.
 
 Usage
 =====
@@ -23,9 +26,10 @@ To use this simply pass ``--format EcoTyper``.
 Full CLI
 ========
 
-There are additional options available that are not shown above. The full options are:
+The full command line of `eco_helper format` with all options is as follows:
 
 .. code-block:: bash
+
     usage: eco_helper format [-h] [-o OUTPUT] [-f FORMAT] [-s SUFFIX] [-i]
                             [-iname INDEXNAME] [-noid] [-n]
                             [-c COLUMNS [COLUMNS ...]] [-p] [-sep SEPARATOR] [-e]
@@ -79,8 +83,6 @@ There are additional options available that are not shown above. The full option
     -a, --annotation      A preset for EcoTyper annotation files corresponding
                             to '--index --indexname ID --columns CellType Sample
                             --format EcoTyper'
-
-
 """
 
 from .funcs import *
