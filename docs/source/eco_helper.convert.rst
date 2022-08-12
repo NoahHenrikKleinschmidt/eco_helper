@@ -1,6 +1,6 @@
 .. _convert:
 
-eco\_helper.convert
+Filetype Conversion
 ===================
 
 .. automodule:: eco_helper.convert

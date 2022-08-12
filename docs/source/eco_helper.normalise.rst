@@ -1,7 +1,7 @@
 .. _normalise:
 
-eco\_helper.normalise
-=====================
+Data Normalisation
+==================
 
 .. automodule:: eco_helper.normalise
    :members:

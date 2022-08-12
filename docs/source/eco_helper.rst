@@ -7,14 +7,3 @@ eco\_helper package
    :members:
    :undoc-members:
    :show-inheritance:
-
-API References
---------------
-
-.. toctree::
-   :maxdepth: 4
-
-   eco_helper.convert
-   eco_helper.format
-   eco_helper.normalise
-   eco_helper.core

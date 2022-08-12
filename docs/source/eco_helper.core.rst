@@ -1,7 +1,7 @@
 .. _core:
 
-eco\_helper.core
-================
+Core Functions
+==============
 
 .. automodule:: eco_helper.core
    :members:
