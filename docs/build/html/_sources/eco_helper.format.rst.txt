@@ -1,5 +1,3 @@
-.. _format:
-
 eco\_helper.format
 ==================
 

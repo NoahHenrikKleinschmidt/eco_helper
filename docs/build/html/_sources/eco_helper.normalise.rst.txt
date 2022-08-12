@@ -1,5 +1,3 @@
-.. _normalise:
-
 eco\_helper.normalise
 =====================
 

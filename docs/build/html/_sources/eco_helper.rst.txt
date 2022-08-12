@@ -1,12 +1,5 @@
-.. _main:
-
 eco\_helper package
 ===================
-
-.. automodule:: eco_helper
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 API References
 --------------
@@ -18,3 +11,12 @@ API References
    eco_helper.format
    eco_helper.normalise
    eco_helper.core
+
+
+Module contents
+---------------
+
+.. automodule:: eco_helper
+   :members:
+   :undoc-members:
+   :show-inheritance:

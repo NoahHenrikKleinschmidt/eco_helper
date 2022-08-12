@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+      <title>eco_helper.convert</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="eco_helper.normalise" href="eco_helper.normalise.html" />
+  <link rel="prev" title="Welcome to eco_helper’s documentation!" href="index.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <img class="logo" src="_static/eco_helper.svg" alt="logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#welcome-to-eco-helper-s-documentation">Contents:</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">eco_helper.convert</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#usage" class="reference internal">Usage</a></li>
+                
+                  <li class="toctree-l2"><a href="#full-cli" class="reference internal">Full CLI</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-eco_helper.convert.funcs" class="reference internal">eco_helper.convert.funcs module</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-eco_helper.convert.tabular" class="reference internal">eco_helper.convert.tabular module</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-eco_helper.convert.mtx" class="reference internal">eco_helper.convert.mtx module</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-eco_helper.convert.seurat" class="reference internal">eco_helper.convert.seurat module</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="eco_helper.normalise.html" class="reference internal ">eco_helper.normalise</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="eco_helper.format.html" class="reference internal ">eco_helper.format</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="eco_helper.core.html" class="reference internal ">eco_helper.core</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>eco_helper.convert</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="index.html"
+       title="previous chapter">← Welcome to eco_helper’s documentation!</a>
+  </li>
+  <li class="next">
+    <a href="eco_helper.normalise.html"
+       title="next chapter">eco_helper.normalise →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="module-eco_helper.convert">
+<span id="eco-helper-convert"></span><span id="convert"></span><h1>eco_helper.convert<a class="headerlink" href="#module-eco_helper.convert" title="Permalink to this heading">¶</a></h1>
+<p>The <cite>convert</cite> submodule provides the functionality to convert data from one format to another.
+It is the basis of the <cite>eco_helper convert</cite> command.</p>
+<p>Specifically, suported conversions are:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>from</p></th>
+<th class="head"><p>to</p></th>
+<th class="head"><p>backwards</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>tabular</p></td>
+<td><p>tabular</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>MTX</p></td>
+<td><p>tabular</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-even"><td><p>RDS (SeuratObject)</p></td>
+<td><p>tabular</p></td>
+<td><p>no</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p>The backward column indicates whether the conversion is possible in both directions.</p>
+</div></blockquote>
+<p>The <cite>tabular</cite> data formats supported are:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>format</p></th>
+<th class="head"><p>separator</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>csv</p></td>
+<td><p>,</p></td>
+</tr>
+<tr class="row-odd"><td><p>tsv</p></td>
+<td><p>&lt;tab&gt;</p></td>
+</tr>
+<tr class="row-even"><td><p>txt</p></td>
+<td><p>&lt;space&gt;</p></td>
+</tr>
+</tbody>
+</table>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eco_helper</span> <span class="n">convert</span> <span class="p">[</span><span class="o">--</span><span class="kn">from</span> <span class="o">&lt;</span><span class="n">from</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">to</span> <span class="o">&lt;</span><span class="n">to</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">output</span> <span class="o">&lt;</span><span class="n">output</span><span class="o">&gt;</span><span class="p">]</span> <span class="o">&lt;</span><span class="nb">input</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;input&gt;</span></code> is the input file and <code class="docutils literal notranslate"><span class="pre">&lt;output&gt;</span></code> is the output file. The <code class="docutils literal notranslate"><span class="pre">--from</span></code> and <code class="docutils literal notranslate"><span class="pre">--to</span></code> options are only required if the format is not explicit from the file suffix.
+They are not case sensitive. If the <code class="docutils literal notranslate"><span class="pre">&lt;output&gt;</span></code> option is not specified, the output file will be the same as the input file with the new format.</p>
+</section>
+<section id="full-cli">
+<h2>Full CLI<a class="headerlink" href="#full-cli" title="Permalink to this heading">¶</a></h2>
+<p>The full command line with all options for <cite>eco_helper convert</cite> is as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>usage: eco_helper convert <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-o OUTPUT<span class="o">]</span> <span class="o">[</span>-r<span class="o">]</span> <span class="o">[</span>--from FMT_IN<span class="o">]</span> <span class="o">[</span>--to FMT_OUT<span class="o">]</span>
+                        <span class="o">[</span>-i<span class="o">]</span> <span class="o">[</span>-d DATA<span class="o">]</span> <span class="o">[</span>-m METADATA <span class="o">[</span>METADATA ...<span class="o">]]</span>
+                        input
+
+This <span class="nb">command</span> converts between different formats. It is able to convert tabular
+dataformats <span class="o">(</span>csv,tsv,txt<span class="o">)</span> to and from mtx format. It can also extract data
+from a SeuratObject <span class="o">(</span>stored <span class="k">in</span> an RDS file<span class="o">)</span> and convert the data to tabular
+formats.
+
+positional arguments:
+input                 Input file.
+
+options:
+-h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+-o OUTPUT, --output OUTPUT
+                        Output file. By default the same as the input with
+                        altered suffix.
+-r, --recursive       Use this to mark the output as a directory rather than
+                        a target output file.
+--from FMT_IN         The input format <span class="k">in</span> <span class="k">case</span> it is not evident from the
+                        input file suffix.
+--to FMT_OUT          The output format <span class="k">in</span> <span class="k">case</span> it is not evident from the
+                        output file suffix.
+-i, --index           Use this to also save the index <span class="o">(</span>rownames<span class="o">)</span> to tabular
+                        output files. By default the index will NOT be written
+                        to the output files. In <span class="k">case</span> of SeuratObject data this
+                        option only applies to metadata tables. The extracted
+                        data will **always** have an index.
+-d DATA, --data DATA  <span class="o">[</span>Used only <span class="k">for</span> Seurat-RDS<span class="o">]</span> The data to extract from
+                        the SeuratObject. If not specified, by default the
+                        <span class="s1">&#39;counts&#39;</span> slot will be extracted.
+-m METADATA <span class="o">[</span>METADATA ...<span class="o">]</span>, --metadata METADATA <span class="o">[</span>METADATA ...<span class="o">]</span>
+                        <span class="o">[</span>Used only <span class="k">for</span> Seurat-RDS<span class="o">]</span> The metadata to extract
+                        from the SeuratObject. This may be any number
+                        accessible slots or attributes of the SeuratObject. If
+                        not specified, by default a <span class="s1">&#39;meta.data&#39;</span> attribute is
+                        tried to be extracted.
+</pre></div>
+</div>
+</section>
+<section id="module-eco_helper.convert.funcs">
+<span id="eco-helper-convert-funcs-module"></span><h2>eco_helper.convert.funcs module<a class="headerlink" href="#module-eco_helper.convert.funcs" title="Permalink to this heading">¶</a></h2>
+<p>These are the main conversion functions that are used by <code class="docutils literal notranslate"><span class="pre">eco_helper</span> <span class="pre">convert</span></code>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.funcs.between_tabulars">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.funcs.</span></span><span class="sig-name descname"><span class="pre">between_tabulars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep_in</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.funcs.between_tabulars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a tabular files to one another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the tabular file.</p></li>
+<li><p><strong>output</strong> (<em>str</em>) – The name of the output filename. The actually created files will
+use this as a base name and attach their symbols to the filenames.</p></li>
+<li><p><strong>sep_in</strong> (<em>str</em>) – The separator to use for the input file.</p></li>
+<li><p><strong>sep_out</strong> (<em>str</em>) – The separator to use for the output file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.funcs.filesuffix">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.funcs.</span></span><span class="sig-name descname"><span class="pre">filesuffix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.funcs.filesuffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the suffix of the filename and a location of the delimiting dot. This will be -1 if NO dots were found! (Error indication)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The name of the file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – The suffix of the file. Or the full filename if no dots were found to delimit a suffix.</p></li>
+<li><p><em>int</em> – The location of the dot in the filename. -1 if no dot was found.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.funcs.from_mtx_to_tabular">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.funcs.</span></span><span class="sig-name descname"><span class="pre">from_mtx_to_tabular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.funcs.from_mtx_to_tabular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an mtx file to tabular file(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the mtx file.</p></li>
+<li><p><strong>output</strong> (<em>str</em>) – The name of the output filename. The actually created files will
+use this as a base name and attach their symbols to the filenames.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – The separator to use.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.funcs.from_seurat_to_tabular">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.funcs.</span></span><span class="sig-name descname"><span class="pre">from_seurat_to_tabular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.funcs.from_seurat_to_tabular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Seurat object to tabular file(s) for the extracted data and any additional metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the RDS file containing a SeuratObject.</p></li>
+<li><p><strong>output</strong> (<em>str</em>) – The name of the output filename. The actually created files will
+use this as a base name and attach their symbols to the filenames.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – The separator to use.</p></li>
+<li><p><strong>which</strong> (<em>str</em>) – The data to extract from the SeuratObject. This can be any slot that is accessible via <cite>GetAssayData</cite> from the SeuratObject.</p></li>
+<li><p><strong>metadata</strong> (<em>list</em>) – The metadata to extract from the SeuratObject. This can be any number slots or attributes that is accessible from SeuratObject.</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Whether to include the index in the output of metadata files.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.funcs.from_tabular_to_mtx">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.funcs.</span></span><span class="sig-name descname"><span class="pre">from_tabular_to_mtx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.funcs.from_tabular_to_mtx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a tabular file to mtx files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the tabular file.</p></li>
+<li><p><strong>output</strong> (<em>str</em>) – The name of the output filename. The actually created files will
+use this as a base name and attach their symbols to the filenames.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – The separator to use.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-eco_helper.convert.tabular">
+<span id="eco-helper-convert-tabular-module"></span><h2>eco_helper.convert.tabular module<a class="headerlink" href="#module-eco_helper.convert.tabular" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt>Read and write tabular dataformats:</dt><dd><ul class="simple">
+<li><p>CSV (Comma Separated Values)</p></li>
+<li><p>TSV (Tab Separated Values)</p></li>
+<li><p>TXT (Space Separated Values)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.tabular.read">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.tabular.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.tabular.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a file into a pandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to read.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – The separator to use.</p></li>
+<li><p><strong>**kwargs</strong> – Any additional keyword arguments to pass to <cite>pd.read_csv</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.tabular.read_csv">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.tabular.</span></span><span class="sig-name descname"><span class="pre">read_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.tabular.read_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a CSV file into a pandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to read.</p></li>
+<li><p><strong>header</strong> (<em>int</em><em>, </em><em>optional</em>) – The row number of the header.</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – The separator to use. By default the separator is inferred based on the first column.
+If a semicolon is found, then the semicolon is used as the separator. If both commas and
+semicolons are found, then the comma is used.</p></li>
+<li><p><strong>index</strong> (<em>str</em><em>, </em><em>optional</em>) – The column to use as the index.</p></li>
+<li><p><strong>**kwargs</strong> – Any additional keyword arguments to pass to <cite>pd.read_csv</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.tabular.read_tsv">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.tabular.</span></span><span class="sig-name descname"><span class="pre">read_tsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.tabular.read_tsv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a TSV file into a pandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to read.</p></li>
+<li><p><strong>header</strong> (<em>int</em><em>, </em><em>optional</em>) – The row number of the header.</p></li>
+<li><p><strong>index</strong> (<em>str</em><em>, </em><em>optional</em>) – The column to use as the index.</p></li>
+<li><p><strong>**kwargs</strong> – Any additional keyword arguments to pass to <cite>pd.read_csv</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.tabular.read_txt">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.tabular.</span></span><span class="sig-name descname"><span class="pre">read_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.tabular.read_txt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a TXT file into a pandas dataframe.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This assumes the data is “ “ space separated.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to read.</p></li>
+<li><p><strong>header</strong> (<em>int</em><em>, </em><em>optional</em>) – The row number of the header.</p></li>
+<li><p><strong>index</strong> (<em>str</em><em>, </em><em>optional</em>) – The column to use as the index.</p></li>
+<li><p><strong>**kwargs</strong> – Any additional keyword arguments to pass to <cite>pd.read_csv</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eco_helper.convert.tabular.separators">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.tabular.</span></span><span class="sig-name descname"><span class="pre">separators</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'csv':</span> <span class="pre">',',</span> <span class="pre">'tsv':</span> <span class="pre">'\t',</span> <span class="pre">'txt':</span> <span class="pre">'</span> <span class="pre">'}</span></em><a class="headerlink" href="#eco_helper.convert.tabular.separators" title="Permalink to this definition">¶</a></dt>
+<dd><p>The separators corresponding to supported tabular data formats.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eco_helper.convert.tabular.supported_formats">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.tabular.</span></span><span class="sig-name descname"><span class="pre">supported_formats</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('csv',</span> <span class="pre">'tsv',</span> <span class="pre">'txt')</span></em><a class="headerlink" href="#eco_helper.convert.tabular.supported_formats" title="Permalink to this definition">¶</a></dt>
+<dd><p>The supported tabular data formats (file suffixes).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.tabular.write">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.tabular.</span></span><span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.tabular.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pandas dataframe to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The dataframe to write.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to write.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – The separator to use.</p></li>
+<li><p><strong>**kwargs</strong> – Any additional keyword arguments to pass to <cite>pd.to_csv</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.tabular.write_csv">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.tabular.</span></span><span class="sig-name descname"><span class="pre">write_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.tabular.write_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pandas dataframe to a CSV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to write.</p></li>
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The dataframe to write.</p></li>
+<li><p><strong>index</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to write the index.</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – The separator to use.</p></li>
+<li><p><strong>**kwargs</strong> – Any additional keyword arguments to pass to <cite>pd.to_csv</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.tabular.write_tsv">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.tabular.</span></span><span class="sig-name descname"><span class="pre">write_tsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.tabular.write_tsv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pandas dataframe to a TSV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to write.</p></li>
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The dataframe to write.</p></li>
+<li><p><strong>index</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to write the index.</p></li>
+<li><p><strong>**kwargs</strong> – Any additional keyword arguments to pass to <cite>pd.to_csv</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.tabular.write_txt">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.tabular.</span></span><span class="sig-name descname"><span class="pre">write_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.tabular.write_txt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pandas dataframe to a TXT file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This will write the data as “ “ space separated.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to write.</p></li>
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The dataframe to write.</p></li>
+<li><p><strong>index</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to write the index.</p></li>
+<li><p><strong>**kwargs</strong> – Any additional keyword arguments to pass to <cite>pd.to_csv</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-eco_helper.convert.mtx">
+<span id="eco-helper-convert-mtx-module"></span><h2>eco_helper.convert.mtx module<a class="headerlink" href="#module-eco_helper.convert.mtx" title="Permalink to this heading">¶</a></h2>
+<p>Read and write Matrix Transfer Archive (MTX) formats.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.mtx.add_names">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.mtx.</span></span><span class="sig-name descname"><span class="pre">add_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.mtx.add_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds column and row names to a dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pandas.DataFrame</em>) – The dataframe to add names to.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the mtx file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dataframe with names.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.mtx.read">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.mtx.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.mtx.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads an mtx file and returns a pandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The name of the mtx file to read.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dataframe containing the mtx data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.mtx.write">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.mtx.</span></span><span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.mtx.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a dataframe to an mtx file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pandas.DataFrame</em>) – The dataframe to write.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the mtx file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-eco_helper.convert.seurat">
+<span id="eco-helper-convert-seurat-module"></span><h2>eco_helper.convert.seurat module<a class="headerlink" href="#module-eco_helper.convert.seurat" title="Permalink to this heading">¶</a></h2>
+<p>Defines wrapper functions to call the <cite>_seurat_rds_to_tabular.R</cite> script,
+to read from an RDS file storing <cite>SeuratObject</cite> and to write to tabular files of the data and metadata.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While this module allows CLI use of the udnerlying Rscript, the Rscript itself also has a
+fully implemented CLI and can thus also be used as a stand-alone if desired.</p>
+</div>
+<dl class="py data">
+<dt class="sig sig-object py" id="eco_helper.convert.seurat.default_metadata">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.seurat.</span></span><span class="sig-name descname"><span class="pre">default_metadata</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['meta.data']</span></em><a class="headerlink" href="#eco_helper.convert.seurat.default_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default metadata to extract from a SeuratObject.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="eco_helper.convert.seurat.supported_formats">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.seurat.</span></span><span class="sig-name descname"><span class="pre">supported_formats</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('rds',</span> <span class="pre">'seurat')</span></em><a class="headerlink" href="#eco_helper.convert.seurat.supported_formats" title="Permalink to this definition">¶</a></dt>
+<dd><p>The supported formats (i.e. file suffixes) to interpret as storing a SeuratObject.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.convert.seurat.to_tabular">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.convert.seurat.</span></span><span class="sig-name descname"><span class="pre">to_tabular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.convert.seurat.to_tabular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Seurat object to tabular file(s) for the extracted data and any additional metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the RDS file containing a SeuratObject.</p></li>
+<li><p><strong>output</strong> (<em>str</em>) – The name of the output filename. The actually created files will
+use this as a base name and attach their symbols to the filenames.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – The separator to use.</p></li>
+<li><p><strong>which</strong> (<em>str</em>) – The data to extract from the SeuratObject. This can be any slot that is accessible via <cite>GetAssayData</cite> from the SeuratObject.</p></li>
+<li><p><strong>metadata</strong> (<em>list</em>) – The metadata to extract from the SeuratObject. This can be any number slots or attributes that is accessible from SeuratObject.</p></li>
+<li><p><strong>index</strong> (<em>bool</em>) – Whether to include the index in the output of metadata files.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="index.html"
+       title="previous chapter">← Welcome to eco_helper’s documentation!</a>
+  </li>
+  <li class="next">
+    <a href="eco_helper.normalise.html"
+       title="next chapter">eco_helper.normalise →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Noah Kleinschmidt.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

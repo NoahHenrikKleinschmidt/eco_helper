@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+      <title>eco_helper.core</title>
+    
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="prev" title="eco_helper.format" href="eco_helper.format.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">eco_helper</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#welcome-to-eco-helper-s-documentation">Contents:</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="eco_helper.convert.html" class="reference internal ">eco_helper.convert</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="eco_helper.normalise.html" class="reference internal ">eco_helper.normalise</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="eco_helper.format.html" class="reference internal ">eco_helper.format</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">eco_helper.core</a>
+            
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#module-eco_helper.core.terminal_funcs" class="reference internal">eco_helper.core.terminal_funcs module</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-eco_helper.core.TerminalOutput" class="reference internal">eco_helper.core.TerminalOutput</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>eco_helper.core</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="eco_helper.format.html"
+       title="previous chapter">← eco_helper.format</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="module-eco_helper.core">
+<span id="eco-helper-core"></span><h1>eco_helper.core<a class="headerlink" href="#module-eco_helper.core" title="Permalink to this heading">¶</a></h1>
+<p>Core functions used by <cite>eco_helper</cite>.</p>
+<section id="module-eco_helper.core.terminal_funcs">
+<span id="eco-helper-core-terminal-funcs-module"></span><h2>eco_helper.core.terminal_funcs module<a class="headerlink" href="#module-eco_helper.core.terminal_funcs" title="Permalink to this heading">¶</a></h2>
+<p>The core functions of eco_helper that work with the terminal and running subprocesses.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.core.terminal_funcs.bash">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.core.terminal_funcs.</span></span><span class="sig-name descname"><span class="pre">bash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.core.terminal_funcs.bash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current bash executable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The path to the bash executable.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.core.terminal_funcs.from_terminal">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.core.terminal_funcs.</span></span><span class="sig-name descname"><span class="pre">from_terminal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#eco_helper.core.TerminalOutput.TerminalOutput" title="eco_helper.core.TerminalOutput.TerminalOutput"><span class="pre">TerminalOutput</span></a></span></span><a class="headerlink" href="#eco_helper.core.terminal_funcs.from_terminal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a command in the terminal and return the output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – The command to run.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The output of the command. Which stores the stdout, stderr, and returncode.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#eco_helper.core.TerminalOutput.TerminalOutput" title="eco_helper.core.TerminalOutput.TerminalOutput">TerminalOutput</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.core.terminal_funcs.returncode">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.core.terminal_funcs.</span></span><span class="sig-name descname"><span class="pre">returncode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#eco_helper.core.terminal_funcs.returncode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a command in the terminal and return the returncode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – The command to run.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The returncode of the command.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.core.terminal_funcs.run">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.core.terminal_funcs.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.core.terminal_funcs.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a command in the terminal without catching any outputs.
+Note, this will run in <cite>shell=True</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – The command to run.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.core.terminal_funcs.stderr">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.core.terminal_funcs.</span></span><span class="sig-name descname"><span class="pre">stderr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#eco_helper.core.terminal_funcs.stderr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a command in the terminal and return the stderr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – The command to run.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The stderr of the command.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eco_helper.core.terminal_funcs.stdout">
+<span class="sig-prename descclassname"><span class="pre">eco_helper.core.terminal_funcs.</span></span><span class="sig-name descname"><span class="pre">stdout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#eco_helper.core.terminal_funcs.stdout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a command in the terminal and return the stdout.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmd</strong> (<em>str</em>) – The command to run.</p></li>
+<li><p><strong>file</strong> (<em>str</em>) – A file to write the stdout to. Note this will <strong>overwrite</strong> any previously existing file of the same name!</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The stdout of the command.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-eco_helper.core.TerminalOutput">
+<span id="eco-helper-core-terminaloutput"></span><h2>eco_helper.core.TerminalOutput<a class="headerlink" href="#module-eco_helper.core.TerminalOutput" title="Permalink to this heading">¶</a></h2>
+<p>This class handles the stdout and stderr of a subprocess run.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="eco_helper.core.TerminalOutput.TerminalOutput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eco_helper.core.TerminalOutput.</span></span><span class="sig-name descname"><span class="pre">TerminalOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CompletedProcess</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.core.TerminalOutput.TerminalOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to capture the output of a subprocess run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>process</strong> (<em>subprocess.CompletedProcess</em>) – The completed process object from which to read the output.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="eco_helper.core.TerminalOutput.TerminalOutput.read_output">
+<span class="sig-name descname"><span class="pre">read_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CompletedProcess</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.core.TerminalOutput.TerminalOutput.read_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the output of a subprocess run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>process</strong> (<em>subprocess.CompletedProcess</em>) – The completed process object from which to read the output.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eco_helper.core.TerminalOutput.TerminalOutput.success">
+<span class="sig-name descname"><span class="pre">success</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eco_helper.core.TerminalOutput.TerminalOutput.success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the subprocess run was successful.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="eco_helper.format.html"
+       title="previous chapter">← eco_helper.format</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Noah Kleinschmidt.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

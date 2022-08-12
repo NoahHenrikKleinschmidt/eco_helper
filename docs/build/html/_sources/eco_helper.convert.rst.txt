@@ -1,5 +1,3 @@
-.. _convert:
-
 eco\_helper.convert
 ===================
 
