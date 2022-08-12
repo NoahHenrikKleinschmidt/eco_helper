@@ -5,7 +5,7 @@ It is the core of the ``eco_helper format`` command.
 Usage
 =====
 
->>> eco_helper format [--index] [--names] [--columns <columns>] [--output <output>] [--pseudo] [--formats <formats>] <input>
+    >>> eco_helper format [--index] [--names] [--columns <columns>] [--output <output>] [--pseudo] [--formats <formats>] <input>
 
 where ``<input>`` is the input file and ``<output>`` is the output file. By default the reformatted data will be written to the same file as the input file.
 Using the ``--index`` option, the data index will be re-formatted. 

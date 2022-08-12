@@ -31,7 +31,7 @@ The `tabular` data formats supported are:
 Usage
 =====
 
->>> eco_helper convert [--from <from>] [--to <to>] [--output <output>] <input>
+    >>> eco_helper convert [--from <from>] [--to <to>] [--output <output>] <input>
 
 where ``<input>`` is the input file and ``<output>`` is the output file. The ``--from`` and ``--to`` options are only required if the format is not explicit from the file suffix.
 They are not case sensitive. If the ``<output>`` option is not specified, the output file will be the same as the input file with the new format.
@@ -80,8 +80,6 @@ The full command line with all options for `eco_helper convert` is as follows:
                             accessible slots or attributes of the SeuratObject. If
                             not specified, by default a 'meta.data' attribute is
                             tried to be extracted.
-
-
 """
 
 from .funcs import *
