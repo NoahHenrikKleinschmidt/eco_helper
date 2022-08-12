@@ -13,6 +13,14 @@ class TerminalOutput(object):
     process : subprocess.CompletedProcess
         The completed process object from which to read the output.
 
+    Attributes
+    ----------
+    stdout : str
+        The stdout of the subprocess run.
+    stderr : str
+        The stderr of the subprocess run.
+    returncode : int
+        The return code of the subprocess run.
     """
     def __init__(self, process : subprocess.CompletedProcess):
         self.read_output(process)

@@ -1,19 +1,19 @@
 """
-.. _normalise:
-
 This module provides the functionality to normalise raw counts data to TPM or CPM.
 It is the core of the ``eco_helper normalise`` command.
 
 Note
 ----
-This subcommand exclusively works with ** TSV ** (tab-delimited) formatted files!
+
+    This subcommand exclusively works with **TSV** (tab-delimited) formatted files!
+
 
 Usage
 =====
 
->>> eco_helper normalise <norm> [--lengths <lengths>] [--gtf <gtf>] [--names] [--output <output>] <input>
+    >>> eco_helper normalise <norm> [--lengths <lengths>] [--gtf <gtf>] [--names] [--output <output>] <input>
 
-where <norm> is the kind of normalisation to perform, which can be eithe ``tpm`` or ``cpm``, <input> is the input file, and <output> is the output file. By default the normalised data will be written to the same file as the input file.
+where ``<norm>`` is the kind of normalisation to perform, which can be eithe ``tpm`` or ``cpm``, ``<input>`` is the input file, and ``<output>`` is the output file. By default the normalised data will be written to the same file as the input file.
 In case of ``tpm`` also the lengths of the transcripts must be provided.
 This can be done using the ``--lengths`` option. 
 

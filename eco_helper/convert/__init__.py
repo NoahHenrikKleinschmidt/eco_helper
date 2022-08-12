@@ -1,6 +1,4 @@
 """
-.. _convert:
-
 The `convert` submodule provides the functionality to convert data from one format to another.
 It is the basis of the `eco_helper convert` command.
 
@@ -33,10 +31,10 @@ The `tabular` data formats supported are:
 Usage
 =====
 
-    >>> eco_helper convert [--from <from>] [--to <to>] [--output <output>] <input>
+>>> eco_helper convert [--from <from>] [--to <to>] [--output <output>] <input>
 
-    where <input> is the input file and <output> is the output file. The <from> and <to> options are only required if the format is not explicit from the file suffix.
-    They are not case sensitive. If the <output> option is not specified, the output file will be the same as the input file with the new format.
+where ``<input>`` is the input file and ``<output>`` is the output file. The ``--from`` and ``--to`` options are only required if the format is not explicit from the file suffix.
+They are not case sensitive. If the ``<output>`` option is not specified, the output file will be the same as the input file with the new format.
 
 Full CLI
 ========

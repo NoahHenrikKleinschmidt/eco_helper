@@ -1,6 +1,4 @@
 """
-.. _core:
-
 This module defines core functions used by `eco_helper` and its submodules.
 """
 
