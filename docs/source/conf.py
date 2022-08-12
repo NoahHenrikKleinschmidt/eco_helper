@@ -15,13 +15,13 @@ release = '0.0.1'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'autoapi.extension',
-    # 'sphinx.ext.autodoc',
+    # 'autoapi.extension',
+    'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
 ]
 napoleon_numpy_docstring = True
-autoapi_dirs = ['../../eco_helper']
+# autoapi_dirs = ['../../eco_helper']
 
 templates_path = ['_templates']
 exclude_patterns = []
