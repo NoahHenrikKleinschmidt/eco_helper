@@ -21,8 +21,8 @@ sphinx:
 
 # If using Sphinx, optionally build your docs in additional formats such as PDF
 formats:
+  - htmlzip
   - pdf
-  - html
 
 # Optionally declare the Python requirements required to build your docs
 python:
@@ -31,5 +31,3 @@ python:
       path: .
       extra_requirements:
         - docs
-#   #  - requirements: requirements.txt
-#   #  - requiremen
