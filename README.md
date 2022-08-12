@@ -83,7 +83,7 @@ usage: eco_helper normalise [-h] [-o OUTPUT] [-l LENGTHS] [-g GTF] [-n]
                             [-d DIGITS] [-log]
                             {tpm,cpm} input
 
-    Normalise raw cuonts data to TPM or CPM.
+    Normalise raw counts data to TPM or CPM.
 
     positional arguments:
     {tpm,cpm}             The type of normalisation to perform. Can be either

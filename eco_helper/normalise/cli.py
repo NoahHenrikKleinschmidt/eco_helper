@@ -8,7 +8,7 @@ import eco_helper.normalise.NormTable as norm_table
 
 def setup_parser( parent ):
 
-    descr = "Normalise raw cuonts data to TPM or CPM."
+    descr = "Normalise raw counts data to TPM or CPM."
     parser = parent.add_parser( "normalise", description=descr )
     parser.add_argument( "norm", help = "The type of normalisation to perform. Can be either 'tpm' or 'cpm'.", choices = ["tpm", "cpm"] )
     parser.add_argument( "input", help = "Input file." )

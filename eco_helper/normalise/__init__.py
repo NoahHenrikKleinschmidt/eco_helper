@@ -32,7 +32,7 @@ The full command line of `eco_helper normalise` with all options is as follows:
                             [-d DIGITS] [-log]
                             {tpm,cpm} input
 
-    Normalise raw cuonts data to TPM or CPM.
+    Normalise raw counts data to TPM or CPM.
 
     positional arguments:
     {tpm,cpm}             The type of normalisation to perform. Can be either
