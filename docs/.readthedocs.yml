@@ -28,9 +28,9 @@ formats:
 python:
    version: "3.10"
    install:
-    - method: pip
-      path: .
-      extra_requirements:
-        - docs
+      - method: pip
+        path: .
+        extra_requirements:
+          - docs
   #  - requirements: requirements.txt
   #  - requirements: docs/requirements.txt
