@@ -2,6 +2,9 @@
 This module provides the functionality to perform gene-set enrichment analysis on the results of an Ecotyper run.
 
 `eco_helper` uses the `gseapy package <https://github.com/zqfang/GSEApy>`_ to perform gene set enrichment analysis.
+By default `gseapy enrichr` and `gseapy prerank` analyses are offered. The former is an API to the `enrichr web service <https://maayanlab.cloud/Enrichr/`_ that requires only gene names as inputs.
+The latter requires an additional "rank" dataset associated with the respective gene names. `eco_helper` uses the associated maximum fold change from each gene within the respective cell state as rank data.
+
 
 Usage
 =====
