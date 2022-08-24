@@ -1,5 +1,10 @@
 """
 This class handles EcoType assignments between different EcoTyper runs.
+
+Note
+----
+This module is not yet implemented!
+
 """
 
 import logging
@@ -17,7 +22,8 @@ class EcoTypeCollection( cell_states.CellStateCollection ):
     """
     def __init__( self, directories : list ):
         super().__init__( directories )
-        self.ecotype_assignments = {}
+        print( "still in dev..." )
+        # self.ecotype_assignments = {}
 
-        for cell_type, dirs in self.cell_types.items() :
-            self._find_state_assignments( cell_type, dirs )
+        # for cell_type, dirs in self.cell_types.items() :
+        #     self._find_state_assignments( cell_type, dirs )
