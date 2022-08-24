@@ -9,7 +9,9 @@ import eco_helper.core.settings as settings
 class GeneSetCollection:
     """
     This class handles a collection of gene sets for different cell types.
-    
+    It stores for each cell type a dataframe with the gene sets for each state.
+    This class is iterable over cell types and can be indexed by cell type name and additionally by cell state.
+
     Parameters
     ----------
     gene_sets : dict

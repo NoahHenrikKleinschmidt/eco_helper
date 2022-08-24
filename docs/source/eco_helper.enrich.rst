@@ -1,4 +1,4 @@
-.. _normalise:
+.. _enrich:
 
 Gene Set Enrichment Analysis
 ============================

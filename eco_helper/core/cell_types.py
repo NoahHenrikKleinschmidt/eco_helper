@@ -7,7 +7,9 @@ import eco_helper.core.settings as settings
 
 class CellTypeCollection:
     """
-    This class assembles the cell types from multiple EcoTyper results directories.
+    This class assembles the cell types from multiple EcoTyper results directories. 
+    It will store for each cell type the corresponding data directory from the given EcoTyper results directories.
+    This class is iterable over the cell types identified, and can be indexed by the cell type name.
 
     Parameters
     ----------

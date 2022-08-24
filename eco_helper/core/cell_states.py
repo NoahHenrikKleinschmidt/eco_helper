@@ -13,7 +13,9 @@ import os
 
 class CellStateCollection( cell_types.CellTypeCollection ):
     """
-    This class handles the state assignments between runs.
+    This class handles the state assignments between different EcoTyper runs. 
+    It will store for each cell type a dataframe with the cell type's genes and their corresponding state assingnments.
+    This class is iterable over the cell types identified, and can be indexed by the cell type name.
 
     Parameters
     ----------
@@ -163,6 +165,9 @@ class CellStateCollection( cell_types.CellTypeCollection ):
         gene_sets = pd.concat( gene_sets, axis = 0 )
         return gene_sets
 
+    # NOTE: it could be that there is now some redundancy in the code below
+    # because it seems to do something very similar to _find_state_assignments, 
+    # but I don't want to change anything now...
     def _get_genes_to_states(self):
         """
         Get the gene info with the fold-change data for each cell type and the assigned cell state.

@@ -14,24 +14,30 @@ While designed primarily as a command line tool, `eco_helper` is also a Python p
 In fact, some few functionalities of `eco_helper` can only be accessed via the code API and not via command line. These are minor functions,
 however, such as passing kwargs to file-reading functions, and does not impact the usability from command line in most cases.
 
-There are three primary commands offered by ``eco_helper``:
+There are four primary commands offered by ``eco_helper``:
 
 >>> eco_helper convert 
 
-    The :ref:`convert` command is used to convert data from one format to another.
+    The :ref:`convert <convert>` command is used to convert data from one format to another.
     Supported formats are tabular formats such as TSV, Matrix Transfer Archive (mtx), and 
     SeuratObjects stored in RDS files.
 
 >>> eco_helper normalise
 
-    The :ref:`normalise` command is used to normalise data to TPM or CPM.
+    The :ref:`normalise <normalise>` command is used to normalise data to TPM or CPM.
 
 >>> eco_helper format
 
-    The :ref:`format` command is used to reformat data columns and headers from a tabular file.
+    The :ref:`format <format>` command is used to reformat data columns and headers from a tabular file.
     The purpose of this is to eliminate invalid characters for downstream software. For instance,
     `EcoTyper` does not accept spaces or minuses in the column headers or index. Therefore, using 
     this command one can replace automatically such characters (or any other regex pattern).
+
+>>> eco_helper enrich
+
+    The :ref:`enrich <enrich>` command is used to perform gene set enrichment analysis on EcoTyper results using the `gseapy package <https://github.com/zqfang/GSEApy>`_.
+    This allows automated gene set enrichment analysis using either `enrichr` or `prerank` gseapy analyses directly on all cell types and their identified cell states.
+
 
 .. toctree::
    :maxdepth: 2
@@ -40,6 +46,7 @@ There are three primary commands offered by ``eco_helper``:
    eco_helper.convert
    eco_helper.normalise
    eco_helper.format
+   eco_helper.enrich
    eco_helper.core
 
 

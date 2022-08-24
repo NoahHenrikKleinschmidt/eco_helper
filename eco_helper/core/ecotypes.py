@@ -1,10 +1,5 @@
 """
 This class handles EcoType assignments between different EcoTyper runs.
-
-Note
-----
-This module is not yet implemented!
-
 """
 
 import logging
@@ -14,6 +9,10 @@ import eco_helper.core.cell_states as cell_states
 class EcoTypeCollection( cell_states.CellStateCollection ):
     """
     This class handles EcoType assignments between separate EcoTyper runs.
+
+    Note
+    ----
+    This module is not yet implemented!
 
     Parameters
     ----------
