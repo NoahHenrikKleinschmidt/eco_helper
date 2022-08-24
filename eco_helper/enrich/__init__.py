@@ -1,19 +1,20 @@
 """
 This module provides the functionality to perform gene-set enrichment analysis on the results of an Ecotyper run.
 
-`eco_helper` uses `gseapy` to perform gene set enrichment analysis.
+`eco_helper` uses the `gseapy package <https://github.com/zqfang/GSEApy>`_ to perform gene set enrichment analysis.
 
 Usage
 =====
 
     >>> eco_helper enrich [--prerank] [--enrichr] [--assemble] [--gene_sets <gene sets>] [--output <output>] <input>
 
-    where ``<input>`` is the path to the EcoTyper results directory, and ``<output>`` is the path to the output directory.
-    `eco_helper` offers by default either the `gseapy prerank` or the `enrichr` method for gene set enrichment analysis. 
-    By default each cell-type will produce a separate data file for each of its cell-states. Using the ``--assemble`` option,
-    these individual files will be merged into one single data file for each cell type, including the enrichment results for all its cell-states.
-    In this case the individual files will be removed. 
-    The ``gene_sets`` option can be used to specify the reference gene sets to query when performing the enrichment analysis. Multiple inputs of any format that are accepted by `gseapy` are allowed, and at least one input is required.
+where ``<input>`` is the path to the EcoTyper results directory, and ``<output>`` is the path to the output directory.
+`eco_helper` offers by default either the `gseapy prerank` (``--prerank`` option) or the `enrichr` method (``--enrichr`` option) for gene set enrichment analysis. 
+Both can be passed at the same time.
+By default each cell-type will produce a separate data file for each of its cell-states. Using the ``--assemble`` option,
+these individual files will be merged into one single data file for each cell type, including the enrichment results for all its cell-states.
+In this case the individual files will be removed. 
+The ``--gene_sets`` option can be used to specify the reference gene sets to query when performing the enrichment analysis. Multiple inputs of any format that are accepted by `gseapy` are allowed, and at least one input is required.
 
 Full CLI
 ========
@@ -68,7 +69,7 @@ A safe option is to simply run the enrich commands separately, once with ``--pre
 
     >>> eco_helper enrich --enrichr --prerank --gene_sets Reactome_2016 my_ecotyper_run
 
-In case the above command should fail, separating enrichr and prerank should fix the problem.
+    In case the above command should fail, separating enrichr and prerank should fix the problem.
 
     >>> eco_helper enrich --enrichr --gene_sets Reactome_2016 my_ecotyper_run
     
