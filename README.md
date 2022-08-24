@@ -2,11 +2,16 @@
 eco_helper
 ==========
 
+
+[![Documentation Status](https://readthedocs.org/projects/eco-helper/badge/?version=master)](https://eco-helper.readthedocs.io/en/master/?badge=master)
+[![CodeFactor](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/eco_helper/badge)](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/eco_helper)
+
+
 This is `eco_helper` - a package that offers various command line tools to automate data pre processing with the aim to facilitate working with the [EcoTyper framework](https://github.com/digitalcytometry/ecotyper). While the toolbox is streamlined to work specifically to accomodate the requirements of EcoTyper, the tools are usually customizable and/or perform operations that are useful in a wide field of applications. 
 
 Basic usage
 ===========
-`eco_helper` is primarily intended as a command line tool. However, `eco_helper` can also be used as a python package and be included in your own scripts. In fact, some few functionalities are only available throught the code API, such as passing kwargs to file-reading functions. `eco_helper`'s main command line interface offers three commands: 
+`eco_helper` is primarily intended as a command line tool. However, `eco_helper` can also be used as a python package and be included in your own scripts. In fact, some few functionalities are only available throught the code API, such as passing kwargs to file-reading functions. `eco_helper`'s main command line interface offers four commands: 
 
 ```bash
 eco_helper convert [--from <from>] [--to <to>] [--output <output>] <input>
@@ -27,6 +32,11 @@ eco_helper format [--index] [--names] [--columns <columns>] [--output <output>] 
 
 to re-format data columns, data headers (column names), and or index (rownames) within data files using **regex** substitutions. This is intended to remove invalid characters such as "-" or " " (space), which EcoTyper does not allow in its input data. However, any kind of python-regex substitutions can be performed.
 
+```bash
+eco_helper enrich [--prerank] [--enrichr] [--assemble] [--gene_sets <gene sets>] [--output <output>] <input>
+```
+
+to perform gene set enrichment analysis on EcoTyper results using [gseapy](https://github.com/zqfang/GSEApy).
 
 Command Line Interface
 ======================
@@ -168,4 +178,46 @@ usage: eco_helper format [-h] [-o OUTPUT] [-f FORMAT] [-s SUFFIX] [-i]
     -a, --annotation      A preset for EcoTyper annotation files corresponding
                             to '--index --indexname ID --columns CellType Sample
                             --format EcoTyper'
+```
+
+`eco_helper enrich`
+-------------------
+
+```bash
+usage: eco_helper enrich [-h] [-o OUTPUT] -g GENE_SETS [GENE_SETS ...] [-p]
+                         [-e] [-a] [--organism ORGANISM] [--size SIZE SIZE]
+                         [--permutations PERMUTATIONS]
+                         input
+
+    This command performs gene set enrichment analysis using `gseapy` on the
+    results of an EcoTyper analysis.
+
+    positional arguments:
+    input                 The directory storing the EcoTyper results.
+
+    options:
+    -h, --help            show this help message and exit
+    -o OUTPUT, --output OUTPUT
+                            Output directory. By default a '<input>_gseapy_results'
+                            directory within the in the same location as the input directory.
+    -g GENE_SETS [GENE_SETS ...], --gene_sets GENE_SETS [GENE_SETS ...]
+                            The reference gene sets to use for enrichment
+                            analysis. This can be any number of accepted gene set
+                            inputs for gseapy enrichr or prerank.
+    -p, --prerank         Use this to perform gseapy prerank analysis.
+    -e, --enrichr         Use this to perform gseapy enrichr analysis.
+    -a, --assemble        By default each cell type will produce a separate file
+                            for each cell state enrichment analysis. Using the
+                            `--assemble` option, all cell-state files from one
+                            cell type will be merged together to a single file. In
+                            this case the individual files are removed.
+    --organism ORGANISM   Set the reference organism. By default the organism is
+                            set to 'human'.
+    --size SIZE SIZE      [prerank only] Set the minimum and maximum number of
+                            gene matches for the reference gene sets and the data.
+                            By default 5 and 500 are used. Note, this will require
+                            a two number input for min and max.
+    --permutations PERMUTATIONS
+                            [prerank only] Set the number of permutations to use
+                            for the prerank analysis. By default 1000 is used.
 ```
