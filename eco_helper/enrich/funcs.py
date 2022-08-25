@@ -3,11 +3,11 @@ These are the main functions that are used by ``eco_helper enrich``.
 """
 
 import glob
+import logging
 import os
 import pandas as pd
 import eco_helper.core as ec
 import gseapy as gp
-from alive_progress import alive_bar
 
 def collect_gene_sets( directory : str, outdir : str, enrichr : bool = True, prerank : bool = False ):
     """
@@ -26,6 +26,8 @@ def collect_gene_sets( directory : str, outdir : str, enrichr : bool = True, pre
     """
     collection = ec.CellStateCollection( [directory] )
     collection.export_to_gseapy( directory = outdir, prerank = prerank, enrichr = enrichr )
+
+
 
 def enrichr( directory : str, outdir : str, gene_sets : list or str = "KEGG_2021_Human", organism : str = "human" ):
     """
@@ -50,13 +52,16 @@ def enrichr( directory : str, outdir : str, gene_sets : list or str = "KEGG_2021
     directory, tmpdir, outdir = _enrichr_prep_directories(directory, outdir)
     
     files = os.listdir( directory )
-    with alive_bar( len( files ), title = "Performing gseapy enrichr" ) as bar:
-        for file in files:
-            
-            # perpare the filenames for enrichment analysis
-            infile = os.path.join( directory, file )
-            outfile = f"{file}{ec.settings.enrichr_results_suffix}"
+    # with alive_bar( len( files ), title = "Performing gseapy enrichr" ) as bar:
+    for file in files:
+        
+        # perpare the filenames for enrichment analysis
+        infile = os.path.join( directory, file )
+        outfile = f"{file}{ec.settings.enrichr_results_suffix}"
 
+        logging.info( f"Performing gseapy enrichr on {infile}" )
+
+        try:
             # perform enrichr analysis
             gp.enrichr( 
                         gene_list = infile, 
@@ -65,17 +70,23 @@ def enrichr( directory : str, outdir : str, gene_sets : list or str = "KEGG_2021
                         organism = organism,
                         no_plot = True,
                     )
-            
-            # merge the temporary files into one for each cell type and cell state
-            textfiles = glob.glob( os.path.join( tmpdir, "*.txt" ) )
-            textfiles = [ pd.read_csv( file, sep = "\t" ) for file in textfiles ]
-            final = pd.concat( textfiles )
-            final.to_csv( os.path.join( outdir, outfile ), sep = "\t", index = False )
+        except Exception as e:
+            logging.warning( f"Enrichr failed on {infile}" )
+            logging.warning( e )
+            continue
+        
+        # merge the temporary files into one for each cell type and cell state
+        textfiles = glob.glob( os.path.join( tmpdir, "*.txt" ) )
+        textfiles = [ pd.read_csv( file, sep = "\t" ) for file in textfiles ]
+        final = pd.concat( textfiles )
+        final.to_csv( os.path.join( outdir, outfile ), sep = "\t", index = False )
 
-            bar()
+            # bar()
 
     # remove the temporary directory
     os.system( f"rm -r {tmpdir}" )
+
+
 
 def prerank( directory : str, outdir : str, gene_sets : list or str = "KEGG_2021_Human", organism : str = "human", min_size : int = 5, max_size = 500, permutations : int = 1000, **kwargs ):
     """
@@ -108,13 +119,16 @@ def prerank( directory : str, outdir : str, gene_sets : list or str = "KEGG_2021
     directory, tmpdir, outdir = _prerank_prep_directories(directory, outdir)
     
     files = os.listdir( directory )
-    with alive_bar( len( files ), title = "Performing gseapy prerank" ) as bar:
-        for file in files:
-            
-            # perpare the filenames for enrichment analysis
-            infile = os.path.join( directory, file )
-            outfile = f"{file}{ec.settings.prerank_results_suffix}"
+    # with alive_bar( len( files ), title = "Performing gseapy prerank" ) as bar:
+    for file in files:
+        
+        # perpare the filenames for enrichment analysis
+        infile = os.path.join( directory, file )
+        outfile = f"{file}{ec.settings.prerank_results_suffix}"
 
+        logging.info( f"Performing gseapy prerank on {infile}" )
+
+        try:
             # perform prerank analysis
             gp.prerank( 
                         rnk = infile, 
@@ -127,18 +141,97 @@ def prerank( directory : str, outdir : str, gene_sets : list or str = "KEGG_2021
                         no_plot = True,
                         **kwargs
                     )
-            
-            # merge the temporary files into one for each cell type and cell state
-            # NOTE: prerank makes CSV files not TSV files!
-            textfiles = glob.glob( os.path.join( tmpdir, "*.csv" ) )
-            textfiles = [ pd.read_csv( file, sep = "," ) for file in textfiles ]
-            final = pd.concat( textfiles )
-            final.to_csv( os.path.join( outdir, outfile ), sep = "\t", index = False )
+        except Exception as e:
+            logging.warning( f"Prerank failed on {infile}" )
+            logging.warning( e )
+            continue
 
-            bar()
+        # merge the temporary files into one for each cell type and cell state
+        # NOTE: prerank makes CSV files not TSV files!
+        textfiles = glob.glob( os.path.join( tmpdir, "*.csv" ) )
+        textfiles = [ pd.read_csv( file, sep = "," ) for file in textfiles ]
+        final = pd.concat( textfiles )
+        final.to_csv( os.path.join( outdir, outfile ), sep = "\t", index = False )
+
+            # bar()
 
     # remove the temporary directory
     os.system( f"rm -r {tmpdir}" )
+
+
+
+def enrichr_ecotypes( directory : str, outdir : str, ecotypes : ec.EcotypeCollection, gene_sets : (list or str) = "KEGG_2021_Human", organism : str = "human" ): 
+    """
+    Perform gene set enrichment analysis only on cell types and states contributing to Ecotypes.
+    This will create dedicatd subdirectories within `outdir` for each ecotype, containing the corresponding enrichment results.
+
+    Parameters
+    ----------
+    directory : str
+        The directory storing the extracted gene sets from an EcoTyper results directory. Note, this requires that 
+        the gene sets have already been extracted from the results directory!
+    outdir : str
+        The directory to store the enrichment results in.
+    ecotypes : EcotypeCollection
+        The EcotypeCollection specifying the cell-type and state assignments to ecotypes.
+    gene_sets : list or str
+        The gene sets to perform enrichment analysis on.
+    organism : str
+        The reference organism.
+    """
+    if len( ecotypes ) > 1:
+        raise Exception( "Enrichment is only available for a single Ecotype run!" )
+    
+    directory, tmpdir, outdir = _enrichr_prep_directories( directory, outdir )
+
+    for ecotype in ecotypes: 
+
+        logging.info( f"[Ecotype] {ecotype}" )
+        ecotype_outdir = _assemble_ecotype_subset(directory, outdir, tmpdir, ecotype)
+        
+        # run enrichment analysis
+        enrichr( tmpdir, ecotype_outdir, gene_sets, organism )
+
+    # remove the ecotype subset directory and tmpdir
+    os.system( f"rm -rf {tmpdir}" )
+
+
+
+def prerank_ecotypes( directory : str, outdir : str, ecotypes : ec.EcotypeCollection, gene_sets : (list or str) = "KEGG_2021_Human", organism : str = "human", **kwargs ): 
+    """
+    Perform gene set enrichment analysis only on cell types and states contributing to Ecotypes.
+    This will create dedicatd subdirectories within `outdir` for each ecotype, containing the corresponding enrichment results.
+
+    Parameters
+    ----------
+    directory : str
+        The directory storing the extracted gene sets from an EcoTyper results directory. Note, this requires that 
+        the gene sets have already been extracted from the results directory!
+    outdir : str
+        The directory to store the enrichment results in.
+    ecotypes : EcotypeCollection
+        The EcotypeCollection specifying the cell-type and state assignments to ecotypes.
+    gene_sets : list or str
+        The gene sets to perform enrichment analysis on.
+    organism : str
+        The reference organism.
+    """
+    if len( ecotypes ) > 1:
+        raise Exception( "Enrichment is only available for a single Ecotype run!" )
+    
+    directory, tmpdir, outdir = _prerank_prep_directories( directory, outdir )
+
+    for ecotype in ecotypes: 
+
+        ecotype_outdir = _assemble_ecotype_subset(directory, outdir, tmpdir, ecotype)
+        
+        # run enrichment analysis
+        prerank( tmpdir, ecotype_outdir, gene_sets, organism, **kwargs )
+
+    # remove the ecotype subset directory and tmpdir
+    os.system( f"rm -rf {tmpdir}" )
+
+
 
 def assemble_enrichr_results( directory : str, cell_types : ec.CellTypeCollection, outdir : str = None, remove_raw : bool = True ):
     """
@@ -167,6 +260,8 @@ def assemble_enrichr_results( directory : str, cell_types : ec.CellTypeCollectio
 
         _remove_raw_files(remove_raw, files)
 
+
+
 def assemble_prerank_results( directory : str, cell_types : ec.CellTypeCollection, outdir : str = None, remove_raw : bool = True ):
     """
     Assemble the per-state prerank output text files into a single file per cell type. 
@@ -194,6 +289,8 @@ def assemble_prerank_results( directory : str, cell_types : ec.CellTypeCollectio
 
         _remove_raw_files(remove_raw, files)
 
+
+
 def _enrichr_prep_directories(directory, outdir):
     """
     Prepare the input and output directories for enrichr analysis. This will also create the tmpdir.
@@ -212,6 +309,8 @@ def _enrichr_prep_directories(directory, outdir):
     outdir, tmpdir = _prep_out_and_tmpdir(directory, outdir)
         
     return directory, tmpdir, outdir
+
+
 
 def _prerank_prep_directories(directory, outdir):
     """
@@ -232,6 +331,8 @@ def _prerank_prep_directories(directory, outdir):
         
     return directory, tmpdir, outdir
 
+
+
 def _prep_out_and_tmpdir(directory, outdir):
     """
     Prepare the output and temporary directories for enrichr analysis. This will also create the tmpdir.
@@ -239,10 +340,15 @@ def _prep_out_and_tmpdir(directory, outdir):
     if outdir == directory: 
         outdir = os.path.join( outdir, ec.settings.gseapy_outdir )
 
+    if not os.path.exists( outdir ):
+        os.makedirs( outdir )
+
     tmpdir = os.path.join( outdir, "__tmp" )
     if not os.path.exists( tmpdir ): 
-        os.mkdir( tmpdir )
+        os.makedirs( tmpdir )
     return outdir, tmpdir
+
+
 
 def _remove_raw_files(remove_raw, files):
     """
@@ -258,6 +364,8 @@ def _remove_raw_files(remove_raw, files):
     if remove_raw:
         files = " ".join( files )
         os.system( f"rm {files}" )
+
+
 
 def _merge_dataframes(directory, cell_type):
     """
@@ -291,3 +399,45 @@ def _merge_dataframes(directory, cell_type):
     # concatenate and save the final dataframe
     final = pd.concat( dfs )
     return files, final
+
+
+
+def _assemble_ecotype_subset(directory, outdir, tmpdir, ecotype : ec.Ecotype):
+    """
+    Assembles the datafile subset of the gene sets asscoiated with an Ecotype.
+
+    Parameters
+    ----------
+    directory : str
+        The directory storing the extracted gene sets from an EcoTyper results directory. 
+    outdir : str
+        The directory to store the enrichment results in. Note, a dedicated subdirectory will be made
+        within this directory for the ecotype.
+    tmpdir : str
+        The temporary directory storing the Ecotype-specific gene set file subset. Note, this directory
+        must already exist and will only be filled with symlinks of the file subset.
+    ecotype : Ecotype
+        The Ecotype to assemble the gene set subset for.
+    
+    Returns
+    -------
+    ecotype_outdir : str
+        The directory to store the enrichment results of the ecotype in.
+    """
+
+    # clear the ecotype subset directory (tmpdir)
+    [ os.remove( os.path.join( tmpdir, i) ) for i in os.listdir( tmpdir ) ]
+
+    # make an output directory for the ecotype
+    ecotype_outdir = os.path.join( outdir, ecotype.label )
+    if not os.path.exists( ecotype_outdir ):
+        os.makedirs( ecotype_outdir )
+    
+    # add the ecotype subset files to the subset directory
+    for file in ecotype.gene_set_filenames(): 
+        dest = os.path.join( tmpdir, file )
+        file = os.path.join( directory, file )
+        # os.symlink( file, dest )
+        os.system( f"ln {file} {dest}" )
+
+    return ecotype_outdir

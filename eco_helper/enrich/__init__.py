@@ -60,23 +60,6 @@ Full CLI
     --permutations PERMUTATIONS
                             [prerank only] Set the number of permutations to use
                             for the prerank analysis. By default 1000 is used.
-
-
-Performing both ``enrichr`` and ``prerank``
-===========================================
-
-It is possible to supply both ``--prerank`` and ``--enrichr`` at the same time,
-in which case both analyses are preformed. However, it is a known issue that occasionally 
-the progress bar in the prerank analysis, which is performed after the enrichr analysis, gets stuck for currently unknown reasons causing the analysis to fail.
-A safe option is to simply run the enrich commands separately, once with ``--prerank`` and once with ``--enrichr``.
-
-    >>> eco_helper enrich --enrichr --prerank --gene_sets Reactome_2016 my_ecotyper_run
-
-    In case the above command should fail, separating enrichr and prerank should fix the problem.
-
-    >>> eco_helper enrich --enrichr --gene_sets Reactome_2016 my_ecotyper_run
-    
-    >>> eco_helper enrich --prerank --gene_sets Reactome_2016 my_ecotyper_run
 """
 
 from .funcs import *

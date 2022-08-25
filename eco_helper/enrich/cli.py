@@ -17,6 +17,7 @@ def setup_parser( parent ):
     enrich.add_argument( "-p", "--prerank", help = "Use this to perform gseapy prerank analysis.", action = "store_true" )
     enrich.add_argument( "-e", "--enrichr", help = "Use this to perform gseapy enrichr analysis.", action = "store_true" )
     enrich.add_argument( "-a", "--assemble", help = "By default each cell type will produce a separate file for each cell state enrichment analysis. Using the `--assemble` option, all cell-state files from one cell type will be merged together to a single file. In this case the individual files are removed.", action = "store_true" )
+    enrich.add_argument( "-E", "--ecotypes", help = "Use this to only analyse cell-types and states contributing to Ecotypes. In this case each Ecotype will receive a subdirectory with its enrichment results files. Note, in this case the files will *not* be assembled, and any non-Ecotype-contributing cell-type and state will not be analysed.", action = "store_true" )
     enrich.add_argument( "--organism", help = "Set the reference organism. By default the organism is set to 'human'.", default = "human" )
     enrich.add_argument( "--size", help = "[prerank only] Set the minimum and maximum number of gene matches for the reference gene sets and the data. By default 5 and 500 are used. Note, this will require a two number input for min and max.", type = int, nargs = 2, default = [5, 500] )
     enrich.add_argument( "--permutations", help = "[prerank only] Set the number of permutations to use for the prerank analysis. By default 1000 is used.", type = int, default = 1000 )
@@ -58,6 +59,20 @@ def enrich_func( args ):
         print( "No analysis selected! You must specify the --prerank and/or --enrichr option." )
         return
 
+    if not args.ecotypes: 
+        _enrich_all( gene_sets_dir, args )
+    else:
+        _enrich_ecotypes( gene_sets_dir, args )
+
+def _enrich_all( gene_sets_dir, args ):
+    """
+    Perform enrichment analysis on all cell-types and states.
+
+    Parameters
+    ----------
+    gene_sets_dir : str
+        The directory containing the gene sets.
+    """
     if args.enrichr: 
         funcs.enrichr( 
                         directory = gene_sets_dir, 
@@ -82,3 +97,37 @@ def enrich_func( args ):
         if args.assemble:
             cell_types = core.CellTypeCollection( args.input )
             funcs.assemble_prerank_results( directory = args.output, cell_types = cell_types, remove_raw = True )
+
+
+def _enrich_ecotypes( gene_sets_dir, args ):
+    """
+    Perform enrichment analysis only on Ecotype-contributing cell-types and states.
+
+    Parameters
+    ----------
+    gene_sets_dir : str
+        The directory containing the gene sets.
+    """
+    
+    ecotypes = core.EcotypeCollection( args.input )
+
+    if args.enrichr:
+        funcs.enrichr_ecotypes( 
+                                directory = gene_sets_dir, 
+                                outdir = args.output, 
+                                ecotypes = ecotypes,
+                                gene_sets = args.gene_sets, 
+                                organism = args.organism 
+                            )
+
+    if args.prerank:
+        funcs.prerank_ecotypes( 
+                                directory = gene_sets_dir, 
+                                outdir = args.output, 
+                                ecotypes = ecotypes,
+                                gene_sets = args.gene_sets, 
+                                organism = args.organism,
+                                min_size = args.size[0],
+                                max_size = args.size[1],
+                                permutations = args.permutations
+                            )
