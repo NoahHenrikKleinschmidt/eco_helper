@@ -128,10 +128,6 @@ class EcotypeCollection( cell_states.CellStateCollection ):
     """
     This class handles Ecotype assignments between separate EcoTyper runs.
 
-    Note
-    ----
-    This module is not yet implemented!
-
     Parameters
     ----------
     directories : list
