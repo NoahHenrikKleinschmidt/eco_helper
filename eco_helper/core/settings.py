@@ -26,6 +26,11 @@ rel_expr_col = "MaxFC"
 The data column handling the relative expression.
 """
 
+ecotype_col = "Ecotype"
+"""
+The data column handling the ecotype assignment.
+"""
+
 ecotyper_experiment_col = "run" 
 """
 The data column handling the Ecotyper experiment name.
@@ -43,6 +48,16 @@ The file containing the gene info per celltype, including max fold change and st
 ecotypes_folder = "Ecotypes"
 """
 The folder containing the Ecotypes from an EcoTyper experiment.
+"""
+
+ecotypes_assignment_file = "ecotype_assignment.txt"
+"""
+The file containing the Ecotypes assignment to samples from an EcoTyper experiment.
+"""
+
+ecotypes_composition_file = "ecotypes.txt"
+"""
+The file containing the composition data for Ecotypes from an EcoTyper experiment.
 """
 
 # ----------------------------------------------------------------
