@@ -71,3 +71,5 @@ Full CLI
 """
 
 from .funcs import *
+from .EnrichmentCollection import EnrichmentCollection
+import eco_helper.enrich.visualise as visualise
