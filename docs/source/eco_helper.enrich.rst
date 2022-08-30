@@ -17,3 +17,12 @@ eco\_helper.enrich.funcs module
    :undoc-members:
    :show-inheritance:
 
+
+eco\_helper.enrich.visualise module
+-----------------------------------
+
+.. automodule:: eco_helper.enrich.visualise
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
