@@ -48,7 +48,7 @@ Example
         fig.show()
 
 Plotting backends
-----------------
+-----------------
 
 `eco_helper enrich` can be run in two different backends: `matplotlib` and `plotly`. 
 The `matplotlib` backend is the default and and uses `seaborn` and `matplotlib` to generate figures.
