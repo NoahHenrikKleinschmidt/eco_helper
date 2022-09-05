@@ -2,10 +2,7 @@
 Defines the "convert" subcommand parser and its arguments
 """
 
-import os
-import eco_helper.convert.tabular as tabular
 import eco_helper.convert.funcs as funcs
-import eco_helper.convert.seurat as seurat
 
 def setup_parser( parent ):
 
@@ -52,6 +49,10 @@ def convert_func( args ):
     index : bool
         Use this to also save the index to tabular output files. By default the index will NOT be written. In case of a SeuratObject this attribute only applies to metadata tables, the data will always have the index.
     """
+    import os
+    import eco_helper.convert.tabular as tabular
+    import eco_helper.convert.seurat as seurat
+
     input, output, fmt_in, fmt_out, data, metadata, index, make_dir = args.input, args.output, args.fmt_in, args.fmt_out, args.data, args.metadata, args.index, args.recursive
 
     # start with some error handling
