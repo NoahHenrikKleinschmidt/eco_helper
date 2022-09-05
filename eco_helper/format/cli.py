@@ -3,8 +3,8 @@ Defines the "format" subcommand parser and its arguments
 """
 
 import os
-import eco_helper.format as core
 import eco_helper.format.formats as formats 
+import eco_helper.format as core
 
 def setup_parser( parent ):
     """

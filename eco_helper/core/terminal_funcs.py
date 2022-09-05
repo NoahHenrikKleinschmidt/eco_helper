@@ -2,9 +2,6 @@
 These are core functions of `eco_helper` that work with the terminal and running subprocesses.
 They are mostly wrappers for ``subprocess.run(...)`` that capture output directly without the need for manually catching and decoding them.
 """
-
-import os
-import sys
 import subprocess
 from .TerminalOutput import TerminalOutput
 
