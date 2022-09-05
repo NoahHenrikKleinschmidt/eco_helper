@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/NoahHenrikKleinschmidt/eco_helper",
     
     packages=setuptools.find_packages(),
-    package_data={'': ['*.r', '*.R']},
+    package_data={'': ['*.r', '*.R', '*.ipynb', '*.yaml']},
 
     include_package_data=True,
     classifiers=[
