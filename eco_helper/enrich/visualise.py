@@ -75,6 +75,10 @@ import warnings
 # and we don't want to capture the groups anyway...
 warnings.filterwarnings("ignore", "This pattern is interpreted as a regular expression, and has match groups." )
 
+# suppress the value being set on a copy of a slice warning
+# because we don't care about that here...
+warnings.filterwarnings("ignore", "A value is trying to be set on a copy of a slice from a DataFrame" )
+
 backend = "matplotlib"
 """
 The plotting backend to use. This can be either `matplotlib` or `plotly`.
@@ -237,7 +241,9 @@ class StateScatterplot:
         ylabel = kwargs.pop( "ylabel", self.y )  
 
         if backend == "matplotlib":
+            
             fig = self._matplotlib_highlight(other_color, other_alpha, ax, style, x, y, title, xlabel, ylabel, **kwargs)
+        
         elif backend == "plotly":
 
             hover_data = self._prep_hoverdata(ref_col, kwargs)
@@ -334,9 +340,9 @@ class StateScatterplot:
         for subset, keyterms in subsets.items():
 
             mask = self._mask_keyterms( ref, keyterms )
-            categories[ mask ] = subset 
+            categories.iloc[ mask ] = subset 
         
-        self.df["__hue__"] = categories
+        self.df.loc[ :, "__hue__" ] = categories
 
     @staticmethod
     def _mask_keyterms( ref : pd.Series, keyterms : list,  ):
