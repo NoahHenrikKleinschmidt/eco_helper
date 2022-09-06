@@ -13,7 +13,7 @@ def setup_parser( parent ):
     enrich = parent.add_parser( "enrich", description=descr )
     enrich.add_argument( "input", help = "The directory storing the EcoTyper results." )
     enrich.add_argument( "-o", "--output", help = f"Output directory. By default a '<input>_{settings.gseapy_outdir}' directory within the same location as the input directory.", default = None )
-    enrich.add_argument( "-g", "--gene_sets", help = "The reference gene sets to use for enrichment analysis. This can be any number of accepted gene set inputs for gseapy enrichr or prerank.", required = True, nargs = "+")
+    enrich.add_argument( "-g", "--gene_sets", help = "The reference gene sets to use for enrichment analysis. This can be any number of accepted gene set inputs for gseapy enrichr or prerank.", nargs = "+")
     enrich.add_argument( "-p", "--prerank", help = "Use this to perform gseapy prerank analysis.", action = "store_true" )
     enrich.add_argument( "-e", "--enrichr", help = "Use this to perform gseapy enrichr analysis.", action = "store_true" )
     enrich.add_argument( "-a", "--assemble", help = "By default each cell type will produce a separate file for each cell state enrichment analysis. Using the `--assemble` option, all cell-state files from one cell type will be merged together to a single file. In this case the individual files are removed.", action = "store_true" )
@@ -51,7 +51,7 @@ def enrich_func( args ):
             raise ValueError( "A notebook configuration file is required for notebook generation." )
 
         nb = notebook.EnrichmentNotebook( config = args.notebook_config )
-        if nb.gene_sets: 
+        if nb._enrichment_categories: 
             if args.enrichr:
                 nb.analyse_results( "enrichr" )
             if args.prerank:
@@ -60,6 +60,9 @@ def enrich_func( args ):
         nb.save_notebook( args.input )
     
     else:
+
+        if not args.gene_sets: 
+            raise ValueError( "No gene sets were specified." )
 
         # make sure we have a valid output directory
         if args.output is None:
