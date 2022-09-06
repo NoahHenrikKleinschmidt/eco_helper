@@ -3,10 +3,14 @@ The `EnrichmentNotebook` class creates a Jupyter notebook for enrichment data an
 This notebook is mostly auto-generated and can be used as a setup for manual final analysis.
 """
 import nbformat.v4 as nbf
-import eco_helper.enrich.EnrichmentCollection as enrich
+import eco_helper.enrich.EnrichmentCollection as EnrichmentCollection
+import eco_helper.enrich.visualise as visualise
 import yaml
 import os
 import logging 
+
+from alive_progress import alive_bar
+
 
 class EnrichmentNotebook:
     """
@@ -188,7 +192,7 @@ class EnrichmentNotebook:
         run the notebook to generate them.
         """
         try: 
-            collection = enrich.EnrichmentCollection( self.data_dir, resolution = resolution, which = which )
+            collection = EnrichmentCollection( self.data_dir, resolution = resolution, which = which )
         
         except FileNotFoundError:
             logging.info( "No enrichment data available yet. Running the notebook to generate them." )
@@ -198,7 +202,7 @@ class EnrichmentNotebook:
         
             # now try to get the loaded data again to see if it's now available
             try:
-                collection = enrich.EnrichmentCollection( self.data_dir, resolution = resolution, which = which )
+                collection = EnrichmentCollection( self.data_dir, resolution = resolution, which = which )
             except Exception as e:
                 raise e
 
@@ -226,15 +230,20 @@ class EnrichmentNotebook:
 
         self.markdown_cell( f"# Enrichment results for cell-types ({which})" )
         self._celltype_res_make_get_state_df_cell( _collection_var )
-            
-        for celltype in collection.keys():
-            
-            # add a markdown title cell
-            self.markdown_cell( f"## {celltype} \n\n-----------------" )
+        
+        with alive_bar( len(collection), title = "Pre-running", dual_line = True ) as bar: 
+            for celltype in collection.keys():
                 
-            states = collection[ celltype ].groupby( "State" )
-            for state, df in states:
-                self._celltype_res_make_celltype_analysis_cells( celltype, state, df, x, y )
+                # add a markdown title cell
+                self.markdown_cell( f"## {celltype} \n\n-----------------" )
+                    
+                states = collection[ celltype ].groupby( "State" )
+                for state, df in states:
+
+                    bar.text = f"Pre-running:\t {state} ({celltype})"
+                    self._celltype_res_make_celltype_analysis_cells( celltype, state, df, x, y )
+                
+                bar()
 
     def _analyse_by_ecotypes(self, which, collection, _collection_var, x, y):
         """
@@ -257,16 +266,21 @@ class EnrichmentNotebook:
 
         self.markdown_cell( f"# Enrichment results for ecotypes ({which})" )
         self._ecotype_res_make_get_celltype_df_cell( _collection_var )
-            
-        for ecotype in collection.keys():
-
-            # add a markdown title cell
-            self.markdown_cell( f"## {ecotype} \n\n-----------------" )
+        
+        with alive_bar( len(collection), title = "Pre-running", dual_line = True ) as bar: 
+            for ecotype in collection.keys():
                 
-            celltypes = collection[ ecotype ].groupby( "CellType" )
-            for celltype, df in celltypes:
-                self._ecotype_res_make_celltype_analysis_cells( ecotype, celltype, df, x, y )
 
+                # add a markdown title cell
+                self.markdown_cell( f"## {ecotype} \n\n-----------------" )
+                    
+                celltypes = collection[ ecotype ].groupby( "CellType" )
+                for celltype, df in celltypes:
+
+                    bar.text = f"Pre-running:\t{celltype} ({ecotype})"
+                    self._ecotype_res_make_celltype_analysis_cells( ecotype, celltype, df, x, y )
+
+                bar()
 
     def _celltype_res_make_celltype_analysis_cells( self, celltype, state, df, x, y ):
         """
@@ -303,7 +317,7 @@ def get_state_df( celltype, state ):
     max_length = 60 # just to make sure the gene names are not too long
     df = __collection_var__[ celltype ].query( f"State == '{state}'" )
     df[ "Genes" ] = df[ "Genes" ].apply( lambda x : x.replace( ";" , " " ) )
-    df[ "Genes" ] = df[ "Genes" ].apply( lambda x : x[:max_length]+"..." if len(x) > max_length else x )
+    df.loc[ :, "Genes" ] = df[ "Genes" ].apply( lambda x : x[:max_length]+"..." if len(x) > max_length else x )
     return df
 
 """.strip().replace( "__collection_var__", collection_var )
@@ -322,7 +336,7 @@ def get_celltype_df( ecotype, celltype ):
     max_length = 60 # just to make sure the gene names are not too long
     df = __collection_var__[ ecotype ].query( f"CellType == '{celltype}'" )
     df[ "Genes" ] = df[ "Genes" ].apply( lambda x : x.replace( ";" , " " ) )
-    df[ "Genes" ] = df[ "Genes" ].apply( lambda x : x[:max_length]+"..." if len(x) > max_length else x )
+    df.loc[ :, "Genes" ] = df[ "Genes" ].apply( lambda x : x[:max_length]+"..." if len(x) > max_length else x )
     return df
 
 """.strip().replace( "__collection_var__", collection_var )
@@ -482,7 +496,7 @@ fig.show()
         str or dict
             The subsets to keep as a string or as a dictionary.
         """
-        scatter = enrich.visualise.StateScatterplot( df = df, x = x, y = y )                 
+        scatter = visualise.StateScatterplot( df = df, x = x, y = y )                 
         scatter._highlight( ref_col = "Term", subsets = self._enrichment_categories )
 
         # get the topmost df subset
@@ -566,22 +580,22 @@ for i in prerank.keys():
 
         # first the main parameters
         code_defaults = f"""
-        x = "{x}"
-        y = "{y}"
-        hue = "CellType"
-        style = None
+x = "{x}"
+y = "{y}"
+hue = "CellType"
+style = None
         """.strip() 
 
         # then the axis labels
         code_defaults += """
-        xlabels = {  "matplotlib" : "__mplxlabel__", 
-                    "plotly" : "__plotlyxlabel__" }
-        ylabels = {  "matplotlib" : "__mplylabel__", 
-                    "plotly" : "__plotlyylabel__" }
+xlabels = {  "matplotlib" : "__mplxlabel__", 
+            "plotly" : "__plotlyxlabel__" }
+ylabels = {  "matplotlib" : "__mplylabel__", 
+            "plotly" : "__plotlyylabel__" }
 
-        # automatically get the right labels for the respective backends
-        xlabel = lambda : xlabels[ visualise.backend ]
-        ylabel = lambda : ylabels[ visualise.backend ]
+# automatically get the right labels for the respective backends
+xlabel = lambda : xlabels[ visualise.backend ]
+ylabel = lambda : ylabels[ visualise.backend ]
         """.rstrip() \
         .replace( "__mplxlabel__", mpl_xlabel ) \
         .replace( "__mplylabel__", mpl_ylabel ) \

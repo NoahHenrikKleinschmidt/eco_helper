@@ -69,7 +69,11 @@ import seaborn as sns
 
 import plotly.express as px
 
+import warnings
 
+# suppress the match groups warning because it's annoying 
+# and we don't want to capture the groups anyway...
+warnings.filterwarnings("ignore", "This pattern is interpreted as a regular expression, and has match groups." )
 
 backend = "matplotlib"
 """
