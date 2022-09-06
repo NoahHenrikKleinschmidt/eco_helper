@@ -57,6 +57,14 @@ These figures are interactive and allow features such as hoverinfo or zooming.
 
 To switch the backend back and forth set `eco_helper.visualise.backend` to either `"matplotlib"` or `"plotly"`.
 
+.. code-block:: python
+
+    import eco_helper.visualise as vis
+
+    vis.backend = "matplotlib" # to use matplotlib figures (default)
+
+    vis.backend = "plotly" # to use plotly figures
+
 """
 
 from qpcr._auxiliary.graphical import make_layout_from_list
