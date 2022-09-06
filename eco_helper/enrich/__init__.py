@@ -88,13 +88,25 @@ However, certain options such as ``--size`` or ``--organism`` will be missing fr
 If a notebook encounters already existing results it will simply load these and perform its preset analysis and not recompute the enrichment (unless forced by the config). 
 
 
-    >>> eco_helper enrich --notebook --notebook_config my_enrichment_config.yaml my_enrichment.ipynb
-
+    >>> eco_helper enrich --enrichr --notebook --notebook_config my_enrichment_config.yaml my_enrichment.ipynb
 
 At the core, the preset analysis consists of highlighting subsets of enriched terms which can be supplied in the notebook config file.
 The notebook will automatically generate cells to visualise plotly-based interactive scatterplots to quickly visualise the enrichment results.
 These cells can later be modified manually by the user of course to generate streamlined figures 
 (cells for seaborn figures are also prepared but commented out by default).
+
+.. note::
+
+    In order to automatically perform a pre-scan over all category subsets included in the config, 
+    either ``--enrichr`` or ``--prerank`` must be passed. Otherwise the notebook will not know which results to load and pre-process.
+
+    Hence, the line below will produce a notebook but will be lacking the prepared analysis cells for each celltype / ecotype.
+    
+        >>> eco_helper enrich --notebook --notebook_config my_enrichment_config.yaml my_enrichment.ipynb
+
+    On the other hand this line will produce a notebook with said analysis cells because the notebook knew to load the prerank results.
+
+        >>> eco_helper enrich --prerank --notebook --notebook_config my_enrichment_config.yaml my_enrichment.ipynb
 
 The notebook config file is a yaml file that contains the following settings:
 
