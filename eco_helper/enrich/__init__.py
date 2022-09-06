@@ -81,34 +81,29 @@ Full CLI
 Jupyter Notebook
 ================
 
-`eco_helper` can auto-generate a jupyter notebook to analyse the enrichment results. This notebook will contain a number of plots to visualise the enrichment results.
+`eco_helper` can auto-generate a jupyter notebook to analyse the enrichment results. This notebook will contain a number of cells for plots to visualise the enrichment results.
 To generate a notebook, the ``--notebook`` option must be passed, and a notebook config file must be provided using the ``--notebook_config`` option.
-In this case the notebook will automatically call ``eco_helper enrich`` in case no enrichment results are present yet for the desired dataset. 
-However, certain options such as ``--size`` or ``--organism`` will be missing from this call. Hence, to retain full customization of the command it is recommended to first run ``eco_helper enrich`` manually to generate the desired enrichment results, and then again with the notebook option.
-If a notebook encounters already existing results it will simply load these and perform its preset analysis and not recompute the enrichment (unless forced by the config). 
+
+    >>> eco_helper enrich --notebook --notebook_config my_enrichment_config.yaml my_enrichment.ipynb
 
 
-    >>> eco_helper enrich --enrichr --notebook --notebook_config my_enrichment_config.yaml my_enrichment.ipynb
+In this case the notebook will automatically call ``eco_helper enrich`` in case no enrichment results are present yet for the desired dataset. The notebook will also contain cells to call ``eco_helper enrich`` whenever desired - so each notebook is its own little analysis pipeline with input sections, autmated processing, and output sections.
+However, certain options such as ``--size`` or ``--organism`` will be missing from the notebook-internal call to ``eco_helper enrich``. Therefore, to retain full customization of the command it is recommended to first run ``eco_helper enrich`` manually to generate the desired enrichment results, and then run again with the notebook option.
+If a notebook encounters already existing results it will simply load these and perform its preset analysis without recomputing the enrichment itself (unless forced by the config). 
 
-At the core, the preset analysis consists of highlighting subsets of enriched terms which can be supplied in the notebook config file.
-The notebook will automatically generate cells to visualise plotly-based interactive scatterplots to quickly visualise the enrichment results.
-These cells can later be modified manually by the user of course to generate streamlined figures 
-(cells for seaborn figures are also prepared but commented out by default).
+At the core, the preset analysis consists of highlighting subsets of enriched terms which can be supplied in the notebook config file. The notebook
+will automatically pre-scan these subsets and remove any subsets that fall below a cutoff value among the highest most enriched terms for each cell-state dataset.
 
-.. note::
+The notebook will then automatically generate cells to visualise plotly-based interactive scatterplots to quickly visualise the enrichment results and place the retained subsets in dedicated cells for each cell-state.
+These cells can later be modified manually by the user of course to generate streamlined figures.
+Cells for seaborn figures are also prepared but commented out by default.
 
-    In order to automatically perform a pre-scan over all category subsets included in the config, 
-    either ``--enrichr`` or ``--prerank`` must be passed. Otherwise the notebook will not know which results to load and pre-process.
 
-    Hence, the line below will produce a notebook but will be lacking the prepared analysis cells for each celltype / ecotype.
-    
-        >>> eco_helper enrich --notebook --notebook_config my_enrichment_config.yaml my_enrichment.ipynb
+Notebook config
+---------------
 
-    On the other hand this line will produce a notebook with said analysis cells because the notebook knew to load the prerank results.
-
-        >>> eco_helper enrich --prerank --notebook --notebook_config my_enrichment_config.yaml my_enrichment.ipynb
-
-The notebook config file is a yaml file that contains the following settings:
+In order to generate a notebook, a config file must be provided. 
+This config file is a yaml file which contains the following keys:
 
 .. code-block:: yaml
 
@@ -117,104 +112,104 @@ The notebook config file is a yaml file that contains the following settings:
     # ----------------------------------------------------------------
     directories :
 
-    # available wildcards for filepaths are:
-    # - {user}    | the current username
-    # - {parent}  | the project parent directory
-    # - {results} | the project's raw results directory
-    # - {scripts} | the project's scripts directory ( is {parent}/scripts )
+        # available wildcards for filepaths are:
+        # - {user}    | the current username
+        # - {parent}  | the project parent directory
+        # - {results} | the project's raw results directory
+        # - {scripts} | the project's scripts directory ( is {parent}/scripts )
 
-    # the ecotyper results directory for which to perform or load results of
-    # enrichment analysis.
-    ecotyper_dir : "{results}/your_ecotyper_results"
-    
-    # the project directory
-    parent : "/data/users/{user}/EcoTyper"
+        # the ecotyper results directory for which to perform or load results of
+        # enrichment analysis.
+        ecotyper_dir : "{results}/your_ecotyper_results"
+        
+        # the project directory
+        parent : "/data/users/{user}/EcoTyper"
 
-    # the directory of EcoTyper raw results
-    results : "{parent}/results"
+        # the directory of EcoTyper raw results
+        results : "{parent}/results"
 
-    # the directory where the enrichment results from GSEAPY
-    # should be saved and later loaded from in the notebook.
-    # NOTE: The actual directory will be a `ecotyper_dir` 
-    #       subdirectory within this directory.
-    enrichment_results : "{parent}/gsea_enrichment"
+        # the directory where the enrichment results from GSEAPY
+        # should be saved and later loaded from in the notebook.
+        # NOTE: The actual directory will be a `ecotyper_dir` 
+        #       subdirectory within this directory.
+        enrichment_results : "{parent}/gsea_enrichment"
 
-    # the directory where outputs from the notebook
-    # should be saved (this is an optional 
-    # variable to faciliate working with the notebook)
-    outdir : "{parent}/gsea_results"
+        # the directory where outputs from the notebook
+        # should be saved (this is an optional 
+        # variable to faciliate working with the notebook)
+        outdir : "{parent}/gsea_results"
 
     # ----------------------------------------------------------------
     #   Enrichment analysis settings
     # ----------------------------------------------------------------
     enrichment :
 
-    # enrichment is automatically performed when no 
-    # enrichment results are found. If set to True then
-    # re-computation of enrichment is forced even 
-    # when results are present already.
-    perform_enrichment : False
+        # enrichment is automatically performed when no 
+        # enrichment results are found. If set to True then
+        # re-computation of enrichment is forced even 
+        # when results are present already.
+        perform_enrichment : False
 
-    # if True only ecotype-contributing cell states are analysed
-    # and results are stored in ecotype-specific subdirectories.
-    # Otherwise all cell states are analysed and stored in cell-type 
-    # specific files.
-    ecotype_resolution : True
+        # if True only ecotype-contributing cell states are analysed
+        # and results are stored in ecotype-specific subdirectories.
+        # Otherwise all cell states are analysed and stored in cell-type 
+        # specific files.
+        ecotype_resolution : True
 
-    # perform GSEAPY enrichr
-    enrichr : True
+        # perform GSEAPY enrichr
+        enrichr : True
 
-    # perform GSEAPY prerank
-    prerank : False
+        # perform GSEAPY prerank
+        prerank : False
 
-    # the reference gene sets against which to query.
-    # this can be any input type accepted by GSEAPY
-    gene_sets : 
-        - "Reactome_2016"
-        - "WikiPathway_2021_Human"
-        - "Panther_2016"
-        - "KEGG_2021_Human"
-        - "GO_Biological_Process_2021"
-        - "GO_Molecular_Function_2021"
-        - "GO_Cellular_Component_2021"
+        # the reference gene sets against which to query.
+        # this can be any input type accepted by GSEAPY
+        gene_sets : 
+            - "Reactome_2016"
+            - "WikiPathway_2021_Human"
+            - "Panther_2016"
+            - "KEGG_2021_Human"
+            - "GO_Biological_Process_2021"
+            - "GO_Molecular_Function_2021"
+            - "GO_Cellular_Component_2021"
 
     # ----------------------------------------------------------------
     #   Results analysis settings for automated gene set highlighting
     # ----------------------------------------------------------------
     analysis : 
 
-    # the topmost fraction of enriched terms to use for determining 
-    # if a category might be interesting (i.e. wheter or not 
-    # to keep it for a speific cell-state).
-    top_most_fraction :  0.3
+        # the topmost fraction of enriched terms to use for determining 
+        # if a category might be interesting (i.e. wheter or not 
+        # to keep it for a speific cell-state).
+        top_most_fraction :  0.3
 
-    # the minimum number of hits of a category among the topmost enriched terms 
-    # required to keep a category for a specific cell-state.
-    cutoff : 5
+        # the minimum number of hits of a category among the topmost enriched terms 
+        # required to keep a category for a specific cell-state.
+        cutoff : 5
 
-    # provide a dictionary of reference categories / super-terms
-    # which to query within the enrichment datasets in each cell-state.
-    # or set to NULL to disable.
-    references : 
+        # provide a dictionary of reference categories / super-terms
+        # which to query within the enrichment datasets in each cell-state.
+        # or set to NULL to disable.
+        references : 
 
-        # for example highlighting lipid associated terms
-        "lipid associated" : 
-        - "lipid"
-        - "lipo(protein)?"
-        - "triacyl"
-        - "lipase"
-        - "acylglycer"
-        - "triglycer"
-        - "chylomicron"
-        - "fat"
-        - "fatty ?-?_?acid"
-        - "L( |_|-)?DL"
-        - "H( |_|-)?DL"
-        - "V( |_|-)?LDL" 
-    
-        "another category" :
-            - "another pattern1"
-            - "another pattern2"
+            # for example highlighting lipid associated terms
+            "lipid associated" : 
+            - "lipid"
+            - "lipo(protein)?"
+            - "triacyl"
+            - "lipase"
+            - "acylglycer"
+            - "triglycer"
+            - "chylomicron"
+            - "fat"
+            - "fatty ?-?_?acid"
+            - "L( |_|-)?DL"
+            - "H( |_|-)?DL"
+            - "V( |_|-)?LDL" 
+        
+            "another category" :
+                - "another pattern1"
+                - "another pattern2"
 """
 
 from .funcs import *

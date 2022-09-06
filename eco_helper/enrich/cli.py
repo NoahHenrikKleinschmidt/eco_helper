@@ -52,9 +52,9 @@ def enrich_func( args ):
 
         nb = notebook.EnrichmentNotebook( config = args.notebook_config )
         if nb._enrichment_categories: 
-            if args.enrichr:
+            if nb._enrichr:
                 nb.analyse_results( "enrichr" )
-            if args.prerank:
+            if nb._prerank:
                 nb.analyse_results( "prerank" )
         
         nb.save_notebook( args.input )
