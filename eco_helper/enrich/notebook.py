@@ -46,8 +46,9 @@ class EnrichmentNotebook:
         filename = self._filename
         if not filename:
             filename = f"enrichment_analysis_{ os.path.basename(self._ecotyper_dir) }.ipynb"
+        
         self.save_notebook( filename )
-        cmd = f"jupyter nbconvert --execute {filename}"
+        cmd = f"jupyter nbconvert --execute --to notebook {filename}"
         os.system( cmd )
 
     def load_notebook( self, filename : str ):
@@ -500,12 +501,16 @@ fig.show()
         scatter._highlight( ref_col = "Term", subsets = self._enrichment_categories )
 
         # get the topmost df subset
-        topmost = df.sort_values( x, ascending = False ) 
+        topmost = scatter.df.sort_values( x, ascending = False ) 
         topmost = topmost.head( int( len(topmost) * self._topmost ) )
-        category_counts = topmost["__hue__"].value_counts()
+        category_counts = topmost.loc[ :,"__hue__" ].value_counts()
 
         # now get the categories to keep for that celltype
+        # we drop everything that either has too few counts among the topmost 
+        # entries or that don't appear in the topmost entries at all
         to_drop = [ cat for cat in category_counts.index if category_counts[ cat ] < self._cutoff and cat != "other" ]
+        to_drop += [ cat for cat in self._enrichment_categories if cat not in category_counts.index ]
+
         subsets = { key : value for key, value in self._enrichment_categories.items() if key not in to_drop }
         
         if to_string:
@@ -589,9 +594,9 @@ style = None
         # then the axis labels
         code_defaults += """
 xlabels = {  "matplotlib" : "__mplxlabel__", 
-            "plotly" : "__plotlyxlabel__" }
+             "plotly" : "__plotlyxlabel__" }
 ylabels = {  "matplotlib" : "__mplylabel__", 
-            "plotly" : "__plotlyylabel__" }
+             "plotly" : "__plotlyylabel__" }
 
 # automatically get the right labels for the respective backends
 xlabel = lambda : xlabels[ visualise.backend ]

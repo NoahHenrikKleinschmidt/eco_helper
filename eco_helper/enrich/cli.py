@@ -57,7 +57,9 @@ def enrich_func( args ):
             if nb._prerank:
                 nb.analyse_results( "prerank" )
         
-        nb.save_notebook( args.input )
+        print( "Running notebook..." )
+        nb.execute( args.input )
+        print( "Done." )
     
     else:
 
