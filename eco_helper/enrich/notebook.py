@@ -409,7 +409,7 @@ def get_celltype_df( ecotype, celltype ):
 #
 # )
 # sns.despine()
-# plt.savefig( f"__saveto__", bbox_inches = "tight" )
+# plt.savefig( f"__saveto__", bbox_inches = "tight", facecolor = None )
         """.strip().replace( "__saveto__", "{outdir}/" + f"{ title.replace( ' ', '_') }.png" )
         
         self.code_cell( content )
