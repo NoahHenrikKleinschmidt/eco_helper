@@ -232,6 +232,9 @@ class EnrichmentNotebook:
         self.markdown_cell( f"# Enrichment results for cell-types ({which})" )
         self._celltype_res_make_get_state_df_cell( _collection_var )
         
+        self._make_plotly_collection_summary( _collection_var )
+        self._make_matplotlib_collection_summary( _collection_var )
+
         with alive_bar( len(collection), title = "Pre-running", dual_line = True ) as bar: 
             for celltype in collection.keys():
                 
@@ -268,6 +271,9 @@ class EnrichmentNotebook:
         self.markdown_cell( f"# Enrichment results for ecotypes ({which})" )
         self._ecotype_res_make_get_celltype_df_cell( _collection_var )
         
+        self._make_plotly_collection_summary( _collection_var )
+        self._make_matplotlib_collection_summary( _collection_var )
+
         with alive_bar( len(collection), title = "Pre-running", dual_line = True ) as bar: 
             for ecotype in collection.keys():
                 
@@ -366,7 +372,6 @@ def get_celltype_df( ecotype, celltype ):
             
             # now make static scatterplot cells
             self._make_matplotlib_scatterplot( base_varname, celltype, ecotype )
-
         
     def _make_matplotlib_scatterplot( self, base_varname, child = None, parent = None ):
         """
@@ -446,6 +451,57 @@ fig.show()
         # and add a cell to save the figure 
         self.code_cell( "# fig.write_html( f" + "\"{outdir}/" + f"{ title.replace(' ', '_') }.html\" )" )
 
+
+    def _make_plotly_collection_summary( self, collection_varname ):
+        """
+        Make a cell for the plotly collection summary scatterplot figure
+        """
+        self.markdown_cell( f"Interactive collection summary" )
+
+        # add the main cell content
+        content = f"""
+visualise.backend = "plotly"
+fig = visualise.collection_scatterplot( collection = {collection_varname}, 
+                                        x = x, 
+                                        y = y, 
+                                        hue = hue, 
+                                        style = style, 
+                                        xlabel = xlabel(),
+                                        ylabel = ylabel(),
+                                    )
+
+fig.write_html( f"__outdir__/{collection_varname}_summary.html" )
+fig.show()
+""".strip().replace( "__outdir__", "{outdir}" )
+
+        self.code_cell( content )
+
+    def _make_matplotlib_collection_summary( self, collection_varname ):
+        """
+        Make a cell for the matplotlib collection summary scatterplot figure
+        """
+        self.markdown_cell( f"Static collection summary" )
+
+        # add the main cell content
+        content = f"""
+# visualise.backend = "matplotlib"
+# fig = visualise.collection_scatterplot( collection = {collection_varname}, 
+#                                         x = x, 
+#                                         y = y, 
+#                                         hue = hue, 
+#                                         style = style,
+#                                         xlabel = xlabel(),   
+#                                         ylabel = ylabel(),
+#                                     )
+#
+# fig.suptitle( os.path.basename( directory ) )
+# sns.despine()
+# plt.tight_layout( w_pad = 10 )
+#
+# plt.savefig( f"__outdir__/{collection_varname}_summary.png" )
+""".strip().replace( "__outdir__", "{outdir}" )
+
+        self.code_cell( content )
 
     def _make_setup_cell(self, parent : str, child : str, expand : bool = False ):
         """

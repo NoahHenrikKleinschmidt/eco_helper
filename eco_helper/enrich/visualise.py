@@ -67,6 +67,7 @@ To switch the backend back and forth set `eco_helper.visualise.backend` to eithe
 
 """
 
+from weakref import ref
 from qpcr._auxiliary.graphical import make_layout_from_list
 
 import eco_helper.enrich as enrich
@@ -193,9 +194,56 @@ class StateScatterplot:
         """
         return scatterplot( self.df, self.x, self.y, self.hue, self.style, **kwargs )
 
-    def highlight( self, subsets : dict or function, ref_col : str = None, other_color : str = "gray", other_alpha : float = 0.1, ax : plt.Axes = None, **kwargs ): 
+    def count_highlights( self, subsets : (dict or function), ref_col : str = None, topmost : float = None, cutoff : int = None, dual : bool = True, ax : plt.Axes = None, **kwargs  ):
         """
-        Highlight subsets within the dataframe based on a reference column and a dictionary of subsets to highlight.
+        Highlight subsets within the dataframe based on a reference column and a dictionary of subsets to highlight, showing the counts of terms associated with each subset in a barplot.
+
+        Parameters
+        ----------
+        subsets : dict or function
+            The dictionary of subsets to highlight. 
+            This requires strings as keys and lists of regex patterns of associated terms as values.
+            In case a function is provided, this function may take exactly one argument (the dataframe) 
+            and must return an array-like object suitable as a new dataframe column on which to base the highlighting.
+        ref_col : str
+            The reference column of the dataframe. This is only required if a dictionary of subsets is provided.
+        topmost : float (optional)
+            Count term association in the fraction of topmost enriched terms. This can either be used to restrict counting in total or to add a second counting dataset.
+        cutoff : int (optional)
+            Remove any subsets that do not have at least this number of counts associated with them. Note, this will affect both the full count and a topmost count in the same way!
+        dual : bool (optional)
+            If True, the full counts and topmost counts are plotted as separate subsets. Otherwise if topmost is provided, only the topmost counts are shown.
+        ax : plt.Axes
+            The subplot in which to plot. By default a new figure is being created.
+            This is ignored in `plotly` backend.
+        **kwargs
+            Additional keyword arguments.
+        
+        Returns
+        -------
+        fig : matplotlib.figure.Figure or plotly.graph_objs.Figure
+            The figure object.
+        """
+
+        counts = self._count_highlight( ref_col, subsets, topmost, cutoff, dual )
+
+        xlabel = kwargs.pop( "xlabel", "subset" )
+        ylabel = kwargs.pop( "ylabel", "count" )
+        title = kwargs.pop( "title", "subset counts" ) 
+
+        if backend == "matplotlib":
+            
+            fig = self._matplotlib_highlight_count( counts, xlabel, ylabel, title, **kwargs )
+            
+        elif backend == "plotly":
+
+            fig = self._plotly_highlight_count( counts, xlabel, ylabel, title, **kwargs)
+
+        return fig 
+
+    def highlight( self, subsets : (dict or function), ref_col : str = None, other_color : str = "gray", other_alpha : float = 0.1, ax : plt.Axes = None, **kwargs ): 
+        """
+        Highlight subsets within the dataframe based on a reference column and a dictionary of subsets to highlight, showing the highlighted terms in a colored scatterplot.
 
         Note
         ----
@@ -238,15 +286,7 @@ class StateScatterplot:
         else:
             raise TypeError( "subsets must be a dict or a function" )
 
-        kwargs.pop( "hue", None )
-        style = kwargs.pop( "style", self.style )
-        x = kwargs.pop( "x", self.x )
-        y = kwargs.pop( "y", self.y )
-    
-
-        title = kwargs.pop( "title", None )
-        xlabel = kwargs.pop( "xlabel", self.x )
-        ylabel = kwargs.pop( "ylabel", self.y )  
+        x, y, title, xlabel, ylabel, style = self._get_kwargs( kwargs )  
 
         if backend == "matplotlib":
             
@@ -336,6 +376,119 @@ class StateScatterplot:
 
         return fig
 
+    def _matplotlib_highlight_count( self, df, xlabel, ylabel, title, **kwargs ):
+        """
+        The matplotlib backend plotting method for highlighted counts plots
+        """
+        ax = kwargs.pop( "ax", None )
+        if ax is None:
+            fig, ax = plt.subplots( figsize = kwargs.pop( "figsize", (4, 4) ), dpi = kwargs.pop( "dpi", 300 ) )
+        
+        rot = kwargs.pop( "rot", 45 )
+        align = kwargs.pop( "ha", "left" )
+        yscale = kwargs.pop( "yscale", "linear" )
+
+        sns.barplot( data = df, x = "subset", y = "count", hue = "type", **kwargs )
+        ax.legend( bbox_to_anchor = (1.01, 1), loc = 2, borderaxespad = 0., frameon = False, facecolor = None )
+        
+        plt.setp( ax.xaxis.get_majorticklabels(), rotation = -rot, ha = align, rotation_mode = "anchor" )  
+
+        ax.set( title = title,
+                xlabel = xlabel,
+                ylabel = ylabel,
+                yscale = yscale )
+    
+        return fig 
+
+    def _plotly_highlight_count( self, df, xlabel, ylabel, title, **kwargs ):
+        """
+        The plotly backend plotting method for highlighted counts plots
+        """
+        fig = px.bar( df, x = "subset", y = "count", color = "type", barmode = "group", title = title, labels = { "x" : xlabel, "y" : ylabel }, **kwargs ) 
+        fig.update_layout( legend = dict( title = "") )
+        return fig
+
+
+    def _count_highlight( self, ref_col, subsets, topmost : float = None, cutoff : int = None, dual : bool = True ):
+        """
+        Count the number of terms in each subset.
+
+        Parameters
+        ----------
+        ref_col : str
+            The reference column of the dataframe.
+        subsets : dict
+            The dictionary of subsets to highlight.
+            This requires strings as keys and lists of regex patterns of associated terms as values.
+        topmost : float, optional
+            If provided, the counting can be restricted to a fraction of the data by only taking the topmost fraction of most enriched terms.
+            This is useful to avoid overplotting.
+        cutoff : int, optional
+            To further restrict the results, using a cutoff any subsets with less than this number of terms are removed.
+        dual : bool, optional
+            If True and topmost is provided, the counts for topmost and total are taken and plotted as separate subgroups.
+
+        Returns
+        -------
+        df : pd.DataFrame
+            The dataframe with the counts of subset associated terms.
+        """
+
+        if isinstance( subsets, dict ):
+            if ref_col is None:
+                raise ValueError( "Reference column must be provided if dictionary of subsets is provided." )
+            self._highlight( ref_col, subsets )
+
+        elif callable( subsets ):
+            self.df["__hue__"] = subsets( self.df )
+
+        else:
+            raise TypeError( "subsets must be a dict or a function" )
+
+        counts = self._count_subsets( self.df )
+        counts["type"] = "Full count" 
+
+        if topmost:
+            
+            fraction = int( len(self.df) * topmost )
+            topmost = self.df.sort_values( "Combined Score" ).head( fraction ) 
+            topmost = self._count_subsets( topmost )
+            topmost["type"] = "Topmost count"
+        
+            if dual:
+                counts = pd.concat( [counts, topmost] )
+            else:
+                counts = topmost
+        
+        if cutoff:
+            counts = counts.query( f"count >= {cutoff}" )
+
+        self.df.drop( columns = ["__hue__"], inplace = True )
+
+        return counts
+
+    @staticmethod
+    def _count_subsets( df ):
+        """
+        Count the number of terms in each subset.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            The dataframe with a column for the subset of terms.
+        
+        Returns
+        -------
+        counts : pd.DataFrame
+            The dataframe with the counts of terms in each subset.
+        """
+        counts = df[ "__hue__" ].value_counts()
+        counts = pd.DataFrame( {"count" : counts} ) 
+        counts = counts.reset_index()
+        counts = counts.rename( columns = {"index" : "subset"} )
+
+        return counts
+
     def _highlight( self, ref_col : str, subsets : dict ):
         """
         The core function to generate a "__hue__" column within the dataframe.
@@ -351,6 +504,22 @@ class StateScatterplot:
             categories.iloc[ mask ] = subset 
         
         self.df.loc[ :, "__hue__" ] = categories
+
+    def _get_kwargs(self, kwargs):
+        """
+        Get key attributes from kwargs.
+        """
+        kwargs.pop( "hue", None )
+        style = kwargs.pop( "style", self.style )
+        x = kwargs.pop( "x", self.x )
+        y = kwargs.pop( "y", self.y )
+
+        title = kwargs.pop( "title", None )
+        xlabel = kwargs.pop( "xlabel", self.x )
+        ylabel = kwargs.pop( "ylabel", self.y ) 
+
+        return x, y, title, xlabel, ylabel, style
+
 
     @staticmethod
     def _mask_keyterms( ref : pd.Series, keyterms : list,  ):
