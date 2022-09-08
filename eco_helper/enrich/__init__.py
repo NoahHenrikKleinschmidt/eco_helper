@@ -122,17 +122,15 @@ This config file is a yaml file which contains the following keys:
         # enrichment analysis.
         ecotyper_dir : "{results}/your_ecotyper_results"
         
+        # the directory where outputs (e.g. figures) 
+        # from within the notebook should be saved
+        outdir : "{parent}/gsea_results/your_ecotyper_results"
+
         # the project directory
         parent : "/data/users/{user}/EcoTyper"
 
         # the directory of EcoTyper raw results
         results : "{parent}/results"
-
-        # the directory where the enrichment results from GSEAPY
-        # should be saved and later loaded from in the notebook.
-        # NOTE: The actual directory will be a `ecotyper_dir` 
-        #       subdirectory within this directory.
-        enrichment_results : "{parent}/gsea_enrichment"
 
         # the directory where outputs from the notebook
         # should be saved (this is an optional 

@@ -51,6 +51,10 @@ class EnrichmentNotebook:
         cmd = f"jupyter nbconvert --execute --to notebook {filename}"
         os.system( cmd )
 
+        # and rename the .nbconvert notebook to the actually desired filename and remove the nbconvert tmp file
+        nbfile = f"{filename.replace('.ipynb', '')}.nbconvert.ipynb"
+        os.system( f"mv {nbfile} {filename}" ) # ; rm {nbfile.replace( '.ipynb', '*' )}" )
+
     def load_notebook( self, filename : str ):
         """
         Load a jupyter notebook as template.
