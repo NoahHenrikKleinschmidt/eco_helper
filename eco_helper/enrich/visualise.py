@@ -194,7 +194,7 @@ class StateScatterplot:
         """
         return scatterplot( self.df, self.x, self.y, self.hue, self.style, **kwargs )
 
-    def count_highlights( self, subsets : (dict or function), ref_col : str = None, topmost : float = None, cutoff : int = None, dual : bool = True, ax : plt.Axes = None, **kwargs  ):
+    def count_highlights( self, subsets : (dict or function), ref_col : str = None, topmost : float = None, cutoff : int = None, dual : bool = True, absolute : bool = False, ax : plt.Axes = None, **kwargs  ):
         """
         Highlight subsets within the dataframe based on a reference column and a dictionary of subsets to highlight, showing the counts of terms associated with each subset in a barplot.
 
@@ -213,6 +213,9 @@ class StateScatterplot:
             Remove any subsets that do not have at least this number of counts associated with them. Note, this will affect both the full count and a topmost count in the same way!
         dual : bool (optional)
             If True, the full counts and topmost counts are plotted as separate subsets. Otherwise if topmost is provided, only the topmost counts are shown.
+        absolute : bool (optional)
+            If True the counts are plotted as absolute values. 
+            Otherwise the counts are converted to fractions of all terms within the reference dataset.
         ax : plt.Axes
             The subplot in which to plot. By default a new figure is being created.
             This is ignored in `plotly` backend.
@@ -225,7 +228,7 @@ class StateScatterplot:
             The figure object.
         """
 
-        counts = self._count_highlight( ref_col, subsets, topmost, cutoff, dual )
+        counts = self._count_highlight( ref_col, subsets, topmost, cutoff, dual, absolute )
 
         xlabel = kwargs.pop( "xlabel", "subset" )
         ylabel = kwargs.pop( "ylabel", "count" )
@@ -233,7 +236,7 @@ class StateScatterplot:
 
         if backend == "matplotlib":
             
-            fig = self._matplotlib_highlight_count( counts, xlabel, ylabel, title, **kwargs )
+            fig = self._matplotlib_highlight_count( counts, xlabel, ylabel, title, ax = ax, **kwargs )
             
         elif backend == "plotly":
 
@@ -409,7 +412,7 @@ class StateScatterplot:
         return fig
 
 
-    def _count_highlight( self, ref_col, subsets, topmost : float = None, cutoff : int = None, dual : bool = True ):
+    def _count_highlight( self, ref_col, subsets, topmost : float = None, cutoff : int = None, dual : bool = True, absolute : bool = False ):
         """
         Count the number of terms in each subset.
 
@@ -427,6 +430,8 @@ class StateScatterplot:
             To further restrict the results, using a cutoff any subsets with less than this number of terms are removed.
         dual : bool, optional
             If True and topmost is provided, the counts for topmost and total are taken and plotted as separate subgroups.
+        absolute : bool, optional
+            If True, the counts are taken as absolute values, otherwise they are taken as relative values.
 
         Returns
         -------
@@ -448,13 +453,21 @@ class StateScatterplot:
         counts = self._count_subsets( self.df )
         counts["type"] = "Full count" 
 
+        if not absolute: 
+            counts["count"] /= len( self.df )
+
         if topmost:
             
             fraction = int( len(self.df) * topmost )
-            topmost = self.df.sort_values( "Combined Score" ).head( fraction ) 
+            topmost = self.df.sort_values( "Combined Score", ascending = False ).head( fraction ) 
+            length = len( topmost )
+
             topmost = self._count_subsets( topmost )
             topmost["type"] = "Topmost count"
-        
+
+            if not absolute:
+                topmost["count"] /= length
+
             if dual:
                 counts = pd.concat( [counts, topmost] )
             else:
