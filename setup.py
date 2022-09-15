@@ -23,6 +23,21 @@ setuptools.setup(
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering :: Bio-Informatics",
     ],
+
+    install_requires=[
+        "pandas",
+        "numpy",
+        "qpcr",
+        "PyYAML",
+        "scipy",
+        "matplotlib",
+        "seaborn",
+        "plotly",
+        "tqdm",
+        "gseapy",
+        "alive_progress>=2.0.0",
+    ],
+
     entry_points={
         "console_scripts": [ 
             "eco_helper=eco_helper.cli:main",
