@@ -29,16 +29,21 @@ def drop_func( args ):
     from eco_helper.drop.funcs import drop_from_col
 
     # load the data
+    print( "Reading data..." )
     dataset = ds.Dataset( args.annotation, args.expression )
 
     if args.ids is not None:
+        print( f"Dropping entries: {args.ids}" )
         dataset = drop_from_col(dataset, args.ids, args.idcol)
     if args.samples is not None:
+        print( f"Dropping samples: {args.samples}" )
         dataset = drop_from_col(dataset, args.samples, args.samplecol)
     if args.celltypes is not None:
+        print( f"Dropping cell-types: {args.celltypes}" )
         dataset = drop_from_col(dataset, args.celltypes, args.celltypecol)
 
     # write the output
+    print( "Wrinting output..." )
     if args.output is None:
         annotation = args.annotation + ".drop"
         expression = args.expression + ".drop"
@@ -47,3 +52,4 @@ def drop_func( args ):
         expression = args.output + ".expression.tsv"
     
     dataset.write( annotation, expression )
+    print( "Done." )

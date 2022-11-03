@@ -80,8 +80,9 @@ def read_anotation( filename : str ):
         The annotation file as a pandas DataFrame.
     """
     df = pd.read_csv(filename, sep='\t', index_col=0)
+    names = list( df.columns ) + [df.index.name]
     for col in BENCHMARK_COLS:
-        if col not in df.columns:
+        if col not in names:
             warnings.warn(f"The annotation file is not Ecotyper-friendly (yet): Column {col} not found...")
     return df
 
