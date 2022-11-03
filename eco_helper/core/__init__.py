@@ -7,3 +7,4 @@ import eco_helper.core.settings as settings
 from eco_helper.core.cell_types import CellTypeCollection
 from eco_helper.core.cell_states import CellStateCollection
 from eco_helper.core.ecotypes import EcotypeCollection, Ecotype
+from eco_helper.core.dataset import Dataset
