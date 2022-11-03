@@ -2,10 +2,6 @@
 Defines the "convert" subcommand parser and its arguments
 """
 
-import os
-import eco_helper.convert.tabular as tabular
-import eco_helper.convert.funcs as funcs
-import eco_helper.convert.seurat as seurat
 
 def setup_parser( parent ):
 
@@ -52,6 +48,12 @@ def convert_func( args ):
     index : bool
         Use this to also save the index to tabular output files. By default the index will NOT be written. In case of a SeuratObject this attribute only applies to metadata tables, the data will always have the index.
     """
+    import os
+    import eco_helper.convert.tabular as tabular
+    import eco_helper.convert.seurat as seurat
+    import eco_helper.convert.funcs as funcs
+    from eco_helper.convert.cli_aux import _prep_formats, _assemble_outfile_name
+
     input, output, fmt_in, fmt_out, data, metadata, index, make_dir = args.input, args.output, args.fmt_in, args.fmt_out, args.data, args.metadata, args.index, args.recursive
 
     # start with some error handling
@@ -106,25 +108,3 @@ def convert_func( args ):
             funcs.from_seurat_to_tabular( input, output, sep_out, data, metadata, index )
         else:
             raise ValueError(f"Cannot convert from {fmt_in} to {fmt_out}")
-
-def _prep_formats(input, output, fmt_in, fmt_out):
-    """
-    Prepares the input and output formats.
-    """
-    if fmt_in is None:
-        fmt_in,_ = funcs.filesuffix( input )
-    if fmt_out is None:
-        fmt_out,_ = funcs.filesuffix( output )
-
-    fmt_in = fmt_in.lower()
-    fmt_out = fmt_out.lower()
-    return fmt_in,fmt_out
-
-def _assemble_outfile_name(input, fmt_out):
-    """
-    Assembles the output file name from the input file name and the output format.
-    """
-    # we find the last occurrence of a dot and assume that thereafter is the output suffix
-    # we crop the filename there and add the new file suffix.
-    return input[ : input.rfind( "." ) ] + f".{fmt_out}"
-

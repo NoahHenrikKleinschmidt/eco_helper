@@ -2,10 +2,6 @@
 Defines the "normalise" subcommand parser and its arguments
 """
 
-from eco_helper.convert.funcs import filesuffix
-import eco_helper.normalise.funcs as funcs
-import eco_helper.normalise.NormTable as norm_table
-
 def setup_parser( parent ):
 
     descr = "Normalise raw counts data to TPM or CPM."
@@ -25,6 +21,11 @@ def normalise_func( args ):
     """
     The core function of the "normalise" subcommand.
     """
+    
+    from eco_helper.convert.funcs import filesuffix
+    import eco_helper.normalise.funcs as funcs
+    import eco_helper.normalise.NormTable as norm_table
+
     if args.output is None:
         args.output = args.input.replace( filesuffix( args.input )[0], f"{args.norm}.{ filesuffix(args.input)[0] }" )
     

@@ -6,3 +6,4 @@ However, the package can be used directly as a library.
 import eco_helper.core as core
 import eco_helper.format as format
 import eco_helper.normalise as normalise
+import eco_helper.enrich as enrich

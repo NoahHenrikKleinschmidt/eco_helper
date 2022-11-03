@@ -14,6 +14,14 @@ release = '0.0.1'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
+
+MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'plotly', 
+                'plotly.subplots', 'plotly.graph_objs', 'seaborn', 'matplotlib.pyplot', 
+                'matplotlib.lines', 'scipy.interpolate', 'scipy.stats', 'streamlit', 'pandas', 'gseapy', 'qpcr',
+                'nbformat', 'PyYAML', 'yaml' ]
+                
+autodoc_mock_imports = MOCK_MODULES
+
 extensions = [
     # 'autoapi.extension',
     'sphinx.ext.autodoc',

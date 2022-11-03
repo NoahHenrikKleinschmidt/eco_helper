@@ -2,11 +2,14 @@
 This module provides the functionality to normalise raw counts data to TPM or CPM.
 It is the core of the ``eco_helper normalise`` command.
 
-Note
-----
-
+.. note::
+    
     This subcommand exclusively works with **TSV** (tab-delimited) formatted files!
 
+.. warning::
+
+    Depending on the size of the expression matrix, this can be very memory consuming! 
+    If working on a cluster, make sure to use a node with enough memory.
 
 Usage
 =====

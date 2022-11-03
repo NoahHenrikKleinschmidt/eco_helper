@@ -10,7 +10,7 @@ This is `eco_helper` - a package that offers various command line tools to autom
 
 Basic usage
 ===========
-`eco_helper` is primarily intended as a command line tool. However, `eco_helper` can also be used as a python package and be included in your own scripts. In fact, some few functionalities are only available throught the code API, such as passing kwargs to file-reading functions. `eco_helper`'s main command line interface offers three commands: 
+`eco_helper` is primarily intended as a command line tool. However, `eco_helper` can also be used as a python package and be included in your own scripts. In fact, some few functionalities are only available throught the code API, such as passing kwargs to file-reading functions. `eco_helper`'s main command line interface offers four commands: 
 
 ```bash
 eco_helper convert [--from <from>] [--to <to>] [--output <output>] <input>
@@ -30,6 +30,18 @@ eco_helper format [--index] [--names] [--columns <columns>] [--output <output>] 
 ```
 
 to re-format data columns, data headers (column names), and or index (rownames) within data files using **regex** substitutions. This is intended to remove invalid characters such as "-" or " " (space), which EcoTyper does not allow in its input data. However, any kind of python-regex substitutions can be performed.
+
+```bash
+eco_helper enrich [--prerank] [--enrichr] [--assemble] [--gene_sets <gene sets>] [--output <output>] <input>
+```
+
+to perform gene set enrichment analysis on EcoTyper results using [gseapy](https://github.com/zqfang/GSEApy).
+
+```bash
+eco_helper drop [--samples <samples>] [--celltypes <celltypes>] [--ids <ids>] <annotation> <expression>
+```
+
+to remove entries from the an EcoTyper dataset. Entries can be directly specified by their _ids_, or entire cell-types or samples can be removed.
 
 
 Command Line Interface
@@ -173,3 +185,76 @@ usage: eco_helper format [-h] [-o OUTPUT] [-f FORMAT] [-s SUFFIX] [-i]
                             to '--index --indexname ID --columns CellType Sample
                             --format EcoTyper'
 ```
+
+`eco_helper enrich`
+-------------------
+
+```bash
+usage: eco_helper enrich [-h] [-o OUTPUT] [-g GENE_SETS [GENE_SETS ...]] [-p] [-e] [-a] [-E] [-n] [--notebook_config NOTEBOOK_CONFIG] [--organism ORGANISM]
+                         [--size SIZE SIZE] [--permutations PERMUTATIONS]
+                         input
+
+This command performs gene set enrichment analysis using `gseapy` on the results of an EcoTyper analysis.
+
+positional arguments:
+  input                 The directory storing the EcoTyper results.
+
+options:
+  -h, --help            show this help message and exit
+  -o OUTPUT, --output OUTPUT
+                        Output directory. By default a '<input>_gseapy_results' directory within the same location as the input directory.
+  -g GENE_SETS [GENE_SETS ...], --gene_sets GENE_SETS [GENE_SETS ...]
+                        The reference gene sets to use for enrichment analysis. This can be any number of accepted gene set inputs for gseapy enrichr or prerank.
+  -p, --prerank         Use this to perform gseapy prerank analysis.
+  -e, --enrichr         Use this to perform gseapy enrichr analysis.
+  -a, --assemble        By default each cell type will produce a separate file for each cell state enrichment analysis. Using the `--assemble` option, all cell-
+                        state files from one cell type will be merged together to a single file. In this case the individual files are removed.
+  -E, --ecotypes        Use this to only analyse cell-types and states contributing to Ecotypes. In this case each Ecotype will receive a subdirectory with its
+                        enrichment results files. Note, in this case the files will *not* be assembled, and any non-Ecotype-contributing cell-type and state will
+                        not be analysed.
+  -n, --notebook        Generate a jupyter notebook to analyse the enrichment results. If this option is specified, then the <intput> argument is interpreted as
+                        the filename of the notebook to generate. By specifying '-' as filename a default filename with the dataset name is used.
+  --notebook_config NOTEBOOK_CONFIG
+                        The configuration file for notebook generation. This is required for the notebook to be generated.
+  --organism ORGANISM   Set the reference organism. By default the organism is set to 'human'.
+  --size SIZE SIZE      [prerank only] Set the minimum and maximum number of gene matches for the reference gene sets and the data. By default 5 and 500 are used.
+                        Note, this will require a two number input for min and max.
+  --permutations PERMUTATIONS
+                        [prerank only] Set the number of permutations to use for the prerank analysis. By default 1000 is used.
+```
+
+
+
+`eco_helper drop`
+-------------------
+
+```bash
+usage: eco_helper drop [-h] [-o OUTPUT] [-s SAMPLES [SAMPLES ...]] [-c CELLTYPES [CELLTYPES ...]] [-i IDS [IDS ...]] [-scol SAMPLECOL] [-ccol CELLTYPECOL]
+                       [-idcol IDCOL]
+                       annotation expression
+
+This command allows removal of entries from EcoTyper datasets.
+
+positional arguments:
+  annotation            The file storing the annotations.
+  expression            The file storing the expression matrix.
+
+options:
+  -h, --help            show this help message and exit
+  -o OUTPUT, --output OUTPUT
+                        The output basename. This will generate a <basename>.annotation.tsv and <basename>.expression.tsv file. By default, the input filenames are
+                        appended by '.drop' at the end.
+  -s SAMPLES [SAMPLES ...], --samples SAMPLES [SAMPLES ...]
+                        The samples whose entries to drop
+  -c CELLTYPES [CELLTYPES ...], --celltypes CELLTYPES [CELLTYPES ...]
+                        The cell-types whose entries to drop
+  -i IDS [IDS ...], --ids IDS [IDS ...]
+                        Specific entries to drop
+  -scol SAMPLECOL, --samplecol SAMPLECOL
+                        The column containing the sample annotations. By default EcoTyper-friendly 'Sample' is assumed.
+  -ccol CELLTYPECOL, --celltypecol CELLTYPECOL
+                        The column containing the cell-type annotations. By default EcoTyper-friendly 'CellType' is assumed.
+  -icol IDCOL, --idcol IDCOL
+                        The column containing the entry identifiers. By default EcoTyper-friendly 'ID' is assumed.
+```
+
