@@ -81,14 +81,16 @@ def drop_from_col( dataset : ds.Dataset, values : list, col : str ) -> ds.Datase
 
     if col != "ID" and col not in annotation.columns:
         raise ValueError(f"Column {col} not found in annotation file.")
+    elif col not in annotation.columns:
+        raise ValueError(f"Column {col} not found in annotation file.")
 
     values = list(values)
-    if "ID" in annotation.columns:
-        mask = lambda values: annotation["ID"].isin(values)
-        get_ids = lambda mask: annotation[mask]["ID"].values
-    else:
+
+    get_ids = lambda mask: annotation[mask].index.values 
+    if col == "ID" and "ID" not in annotation.columns:
         mask = lambda values: annotation.index.isin(values)
-        get_ids = lambda mask: annotation[mask].index.values
+    else:
+        mask = lambda values: annotation[col].isin(values)
 
     # drop entries from annotation
     drop_mask = mask(values)
@@ -97,7 +99,7 @@ def drop_from_col( dataset : ds.Dataset, values : list, col : str ) -> ds.Datase
     annotation = annotation[ ~drop_mask ]
 
     # drop entries from expression
-    expression = expression.drop(ids_to_drop, axis=1)
+    expression = expression.drop( list(ids_to_drop), axis=1 )
 
     return ds.Dataset(annotation, expression)
 
