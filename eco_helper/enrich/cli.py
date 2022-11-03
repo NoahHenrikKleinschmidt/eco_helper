@@ -2,8 +2,6 @@
 Defines the "enrich" subcommand parser and its arguments
 """
 
-import eco_helper.core as core
-import eco_helper.enrich.funcs as funcs
 import eco_helper.core.settings as settings
 
 
@@ -18,7 +16,7 @@ def setup_parser( parent ):
     enrich.add_argument( "-e", "--enrichr", help = "Use this to perform gseapy enrichr analysis.", action = "store_true" )
     enrich.add_argument( "-a", "--assemble", help = "By default each cell type will produce a separate file for each cell state enrichment analysis. Using the `--assemble` option, all cell-state files from one cell type will be merged together to a single file. In this case the individual files are removed.", action = "store_true" )
     enrich.add_argument( "-E", "--ecotypes", help = "Use this to only analyse cell-types and states contributing to Ecotypes. In this case each Ecotype will receive a subdirectory with its enrichment results files. Note, in this case the files will *not* be assembled, and any non-Ecotype-contributing cell-type and state will not be analysed.", action = "store_true" )
-    enrich.add_argument( "-n", "--notebook", help = "Generate a jupyter notebook to analyse the enrichment results. If this option is specified, then the <intput> argument is interpreted as the filename of the notebook to generate.", action = "store_true", default = None )
+    enrich.add_argument( "-n", "--notebook", help = "Generate a jupyter notebook to analyse the enrichment results. If this option is specified, then the <intput> argument is interpreted as the filename of the notebook to generate. By specifying '-' as filename a default filename with the dataset name is used.", action = "store_true", default = None )
     enrich.add_argument( "--notebook_config", help = "The configuration file for notebook generation. This is required for the notebook to be generated.", default = None )
     enrich.add_argument( "--organism", help = "Set the reference organism. By default the organism is set to 'human'.", default = "human" )
     enrich.add_argument( "--size", help = "[prerank only] Set the minimum and maximum number of gene matches for the reference gene sets and the data. By default 5 and 500 are used. Note, this will require a two number input for min and max.", type = int, nargs = 2, default = [5, 500] )
@@ -41,14 +39,19 @@ def enrich_func( args ):
 
     import os
     import eco_helper.enrich.notebook as notebook
+    from eco_helper.enrich.cli_aux import _enrich_all, _enrich_ecotypes
 
     # Because the notebook itself can call eco_helper enrich we will not call
     # anything else but let the notebook handle everything...
 
     if args.notebook:
-
+        
+            
         if not args.notebook_config:
             raise ValueError( "A notebook configuration file is required for notebook generation." )
+
+        if args.input == "-":
+            args.input = None
 
         nb = notebook.EnrichmentNotebook( config = args.notebook_config )
 
@@ -65,7 +68,7 @@ def enrich_func( args ):
         print( "Pre-running the notebook to screen enrichment results..." )
         nb.execute( args.input )
 
-        print( f"All Done! Notebook '{args.input}' is ready" )
+        print( f"All Done! Notebook '{nb._filename}' is ready" )
     
     else:
 

@@ -2,10 +2,6 @@
 Defines the "format" subcommand parser and its arguments
 """
 
-import os
-import eco_helper.format.formats as formats 
-import eco_helper.format as core
-
 def setup_parser( parent ):
     """
     Sets up the command line interface
@@ -36,6 +32,9 @@ def format( args ):
     """
     The core function of the 'format' command.
     """
+    import os
+    import eco_helper.format as core
+    from eco_helper.format.cli_aux import _apply_presets, _read_formats
 
     if os.path.isdir( args.input ):
         raise ValueError( "The 'format' command does not support directories." )
@@ -62,60 +61,3 @@ def format( args ):
         args.output = args.input
     
     formatter.write_table( args.output, suffix = args.suffix, index = not args.noindex )
-
-    # # if args.annotation :
-    # #         formatter.read_annotation_table( args.input, id_is_index = args.index, id_colname = args.indexname )
-    # #         save_func = formatter.save_annotation_table
-    # #         get_func = formatter._last_annotation
-
-    # # elif args.expression :
-    # #     formatter.read_expression_matrix( args.input, pseudo = args.pseudo )
-    # #     save_func = formatter.save_expression_matrix
-    # #     get_func = formatter._last_matrix
-
-    # formatter.reformat( columns = args.columns )
-
-    # # and now save the output
-    # if args.output is None or os.path.isdir( args.output ):
-    #     formatter.save_to_dir( args.output, args.suffix )
-    # elif args.output is not None:
-    #     suffix = "" if not args.suffix else args.suffix
-    #     outfile = f"{ os.path.abspath( args.output ) }{ suffix }"        
-    #     save_func( outfile, get_func() )
-    # else:
-    #     formatter.save_to_dir( args.output, args.suffix )
-
-def _apply_presets(args):
-    """
-    Applies the presets for expression, ecoexpression, and annotation to the arguments...
-    """
-    if args.expression:
-        args.index = True
-        args.names = True
-        args.pseudo = True
-    elif args.ecoexpression:
-        args.index = True
-        args.names = True
-        args.pseudo = True
-        args.format = "EcoTyper"
-    elif args.annotation:
-        args.index = True
-        args.indexname = "ID"
-        args.columns = ["CellType", "Sample"]
-        args.pseudo = True
-        args.format = "EcoTyper"
-
-def _read_formats( f ):
-    """
-    Reads a formats file if it was passed, else just load the E
-    """
-    if f is not None:
-        if os.path.exists( f ):
-            return core.read_formats_file( f )
-        else:
-            _f = formats.available_formats.get( f, None )
-            if _f is None:
-                raise ValueError( f"The format '{f}' is not available. Try defining your own file and submitting that to --formats." )
-            return _f
-    else:
-        raise ValueError( "No formats are specified." )
