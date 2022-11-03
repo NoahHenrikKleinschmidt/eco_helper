@@ -7,6 +7,7 @@ import eco_helper.convert.cli as convert
 import eco_helper.format.cli as format
 import eco_helper.normalise.cli as normalise
 import eco_helper.enrich.cli as enrich
+import eco_helper.drop.cli as drop
 
 def setup_parser():
 
@@ -25,6 +26,7 @@ A command-line toolbox for data pre-processing streamlined to work with the EcoT
     convert.setup_parser( command )
     format.setup_parser( command )
     normalise.setup_parser( command )
+    drop.setup_parser( command )
     enrich.setup_parser( command )
     return parser
 

@@ -5,7 +5,7 @@ with open( "README.md", "r" ) as fh:
 
 setuptools.setup(
     name="eco_helper", 
-    version="0.0.3",
+    version="0.0.4",
     author="Noah H. Kleinschmidt",
     author_email="noah.kleinschmidt@students.unibe.ch",
     description="A command-line toolbox for data pre-processing streamlined to work with the EcoTyper framework.",
