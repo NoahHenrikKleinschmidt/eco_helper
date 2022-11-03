@@ -1,6 +1,10 @@
 """
 This module provides the functionality to drop sets of entries from the annotation and expression matrix.
 
+.. warning::
+
+    Depending on the size of the expression matrix, this can be very memory consuming! 
+    If working on a cluster, make sure to use a node with enough memory.
 
 Usage
 =====
