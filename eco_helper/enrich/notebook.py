@@ -43,10 +43,11 @@ class EnrichmentNotebook:
         filename : str
             The filename to save the notebook to.
         """
-        filename = self._filename
+        filename = self._filename if not filename else filename
         if not filename:
             filename = f"enrichment_analysis_{ os.path.basename(self._ecotyper_dir) }.ipynb"
-        
+        self._filename = filename
+
         self.save_notebook( filename )
         cmd = f"jupyter nbconvert --execute --to notebook {filename}"
         os.system( cmd )
@@ -536,7 +537,7 @@ fig.show()
 
         return var
 
-    def _generate_subsets_to_keep(self, df, x, y, to_string : bool = True ):
+    def _generate_subsets_to_keep(self, df, x, y, to_string : bool = True, x_ascending : bool = False, y_ascending : bool = True ):
         """
         Performs a pre-run of the enrichment highlighting and excludes all categories that 
         have not enough hit among the top-most enriched terms.
@@ -551,7 +552,11 @@ fig.show()
             The variable name of the y-axis (for highlight cutoff in the prerun).
         to_string : bool, optional
             Whether to return the subsets as a string or as the raw dictionary, by default True.
-        
+        x_ascending : bool, optional
+            Whether to sort the x-axis in ascending order, by default False.
+        y_ascending : bool, optional
+            Whether to sort the y-axis in ascending order, by default True.
+
         Returns
         -------
         str or dict
@@ -561,9 +566,9 @@ fig.show()
         scatter._highlight( ref_col = "Term", subsets = self._enrichment_categories )
 
         # get the topmost df subset
-        topmost = scatter.df.sort_values( x, ascending = False ) 
+        topmost = scatter.df.sort_values( x, ascending = x_ascending ) 
         topmost = topmost.head( int( len(topmost) * self._topmost ) )
-        topmost = scatter.df.sort_values( y, ascending = False )
+        topmost = scatter.df.sort_values( y, ascending = y_ascending )
         topmost = topmost.head( int( len(topmost) * self._topmost ) )
         category_counts = topmost.loc[ :,"__hue__" ].value_counts()
 
