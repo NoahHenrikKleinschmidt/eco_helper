@@ -19,7 +19,9 @@ Full CLI
 
 .. code-block:: bash
 
-     usage: eco_helper drop [-h] [-s SAMPLES [SAMPLES ...]] [-c CELLTYPES [CELLTYPES ...]] [-i IDS [IDS ...]] [-o OUTPUT] annotation expression
+    usage: eco_helper drop [-h] [-o OUTPUT] [-s SAMPLES [SAMPLES ...]] [-c CELLTYPES [CELLTYPES ...]] [-i IDS [IDS ...]] [-scol SAMPLECOL] [-ccol CELLTYPECOL]
+                       [-idcol IDCOL]
+                       annotation expression
 
     This command allows removal of entries from EcoTyper datasets.
 
@@ -29,15 +31,21 @@ Full CLI
 
     options:
     -h, --help            show this help message and exit
+    -o OUTPUT, --output OUTPUT
+                            The output basename. This will generate a <basename>.annotation.tsv and <basename>.expression.tsv file. By default, the input filenames are
+                            appended by '.drop' at the end.
     -s SAMPLES [SAMPLES ...], --samples SAMPLES [SAMPLES ...]
                             The samples whose entries to drop
     -c CELLTYPES [CELLTYPES ...], --celltypes CELLTYPES [CELLTYPES ...]
                             The cell-types whose entries to drop
     -i IDS [IDS ...], --ids IDS [IDS ...]
                             Specific entries to drop
-    -o OUTPUT, --output OUTPUT
-                            The output basename. This will generate a <basename>.annotation.tsv and <basename>.expression.tsv file. By default, the input filenames are
-                            appended by '.drop' at the end.
+    -scol SAMPLECOL, --samplecol SAMPLECOL
+                            The column containing the sample annotations. By default EcoTyper-friendly 'Sample' is assumed.
+    -ccol CELLTYPECOL, --celltypecol CELLTYPECOL
+                            The column containing the cell-type annotations. By default EcoTyper-friendly 'CellType' is assumed.
+    -icol IDCOL, --idcol IDCOL
+                            The column containing the entry identifiers. By default EcoTyper-friendly 'ID' is assumed.
 """
 
 from .funcs import *

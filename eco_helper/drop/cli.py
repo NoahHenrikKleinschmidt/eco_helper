@@ -16,7 +16,7 @@ def setup_parser( parent ):
     drop.add_argument( "-i", "--ids", help = "Specific entries to drop", nargs = "+", default = None )
     drop.add_argument( "-scol", "--samplecol", help = "The column containing the sample annotations. By default EcoTyper-friendly 'Sample' is assumed.", default = "Sample" )
     drop.add_argument( "-ccol", "--celltypecol", help = "The column containing the cell-type annotations. By default EcoTyper-friendly 'CellType' is assumed.", default = "CellType" )
-    drop.add_argument( "-idcol", "--idcol", help = "The column containing the entry identifiers. By default EcoTyper-friendly 'ID' is assumed.", default = "ID" )
+    drop.add_argument( "-icol", "--idcol", help = "The column containing the entry identifiers. By default EcoTyper-friendly 'ID' is assumed.", default = "ID" )
 
     drop.set_defaults( func = drop_func )
 
@@ -26,7 +26,7 @@ def drop_func( args ):
     """
 
     import eco_helper.core.dataset as ds
-    from eco_helper.drop.funcs as drop_from_col
+    from eco_helper.drop.funcs import drop_from_col
 
     # load the data
     dataset = ds.Dataset( args.annotation, args.expression )
