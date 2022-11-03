@@ -14,7 +14,7 @@ While designed primarily as a command line tool, `eco_helper` is also a Python p
 In fact, some few functionalities of `eco_helper` can only be accessed via the code API and not via command line. These are minor functions,
 however, such as passing kwargs to file-reading functions, and does not impact the usability from command line in most cases.
 
-There are four primary commands offered by ``eco_helper``:
+There are five primary commands offered by ``eco_helper``:
 
 >>> eco_helper convert 
 
@@ -38,6 +38,10 @@ There are four primary commands offered by ``eco_helper``:
     The :ref:`enrich <enrich>` command is used to perform gene set enrichment analysis on EcoTyper results using the `gseapy package <https://github.com/zqfang/GSEApy>`_.
     This allows automated gene set enrichment analysis using either `enrichr` or `prerank` gseapy analyses directly on all cell types and their identified cell states.
 
+
+>>> eco_helper drop
+
+    The :ref:`drop <drop>` command is used to drop remove entries from ecotyper datasets. Specific entries, entire celltypes, or samples can be removed.
 
 .. toctree::
    :maxdepth: 2

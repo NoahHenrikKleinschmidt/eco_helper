@@ -49,6 +49,15 @@ eco\_helper.core.EcoTyperConfig
    :undoc-members:
    :show-inheritance:
 
+eco\_helper.core.Dataset
+-------------------------------
+
+.. automodule:: eco_helper.core.dataset
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 eco\_helper.core settings
 -------------------------
 

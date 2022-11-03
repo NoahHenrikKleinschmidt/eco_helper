@@ -24,15 +24,11 @@ Full CLI
 
 .. code-block:: bash
 
-    usage: eco_helper enrich [-h] [-o OUTPUT] -g GENE_SETS [GENE_SETS ...] [-p]
-                         [-e] [-a] [-E] [-n]
-                         [--notebook_config NOTEBOOK_CONFIG]
-                         [--organism ORGANISM] [--size SIZE SIZE]
-                         [--permutations PERMUTATIONS]
+    usage: eco_helper enrich [-h] [-o OUTPUT] [-g GENE_SETS [GENE_SETS ...]] [-p] [-e] [-a] [-E] [-n] [--notebook_config NOTEBOOK_CONFIG] [--organism ORGANISM]
+                         [--size SIZE SIZE] [--permutations PERMUTATIONS]
                          input
 
-    This command performs gene set enrichment analysis using `gseapy` on the
-    results of an EcoTyper analysis.
+    This command performs gene set enrichment analysis using `gseapy` on the results of an EcoTyper analysis.
 
     positional arguments:
     input                 The directory storing the EcoTyper results.
@@ -40,42 +36,25 @@ Full CLI
     options:
     -h, --help            show this help message and exit
     -o OUTPUT, --output OUTPUT
-                            Output directory. By default a
-                            '<input>_gseapy_results' directory within the same
-                            location as the input directory.
+                            Output directory. By default a '<input>_gseapy_results' directory within the same location as the input directory.
     -g GENE_SETS [GENE_SETS ...], --gene_sets GENE_SETS [GENE_SETS ...]
-                            The reference gene sets to use for enrichment
-                            analysis. This can be any number of accepted gene set
-                            inputs for gseapy enrichr or prerank.
+                            The reference gene sets to use for enrichment analysis. This can be any number of accepted gene set inputs for gseapy enrichr or prerank.
     -p, --prerank         Use this to perform gseapy prerank analysis.
     -e, --enrichr         Use this to perform gseapy enrichr analysis.
-    -a, --assemble        By default each cell type will produce a separate file
-                            for each cell state enrichment analysis. Using the
-                            `--assemble` option, all cell-state files from one
-                            cell type will be merged together to a single file. In
-                            this case the individual files are removed.
-    -E, --ecotypes        Use this to only analyse cell-types and states
-                            contributing to Ecotypes. In this case each Ecotype
-                            will receive a subdirectory with its enrichment
-                            results files. Note, in this case the files will *not*
-                            be assembled, and any non-Ecotype-contributing cell-
-                            type and state will not be analysed.
-    -n, --notebook        Generate a jupyter notebook to analyse the enrichment
-                            results. If this option is specified, then the
-                            <intput> argument is interpreted as the filename of
-                            the notebook to generate.
+    -a, --assemble        By default each cell type will produce a separate file for each cell state enrichment analysis. Using the `--assemble` option, all cell-
+                            state files from one cell type will be merged together to a single file. In this case the individual files are removed.
+    -E, --ecotypes        Use this to only analyse cell-types and states contributing to Ecotypes. In this case each Ecotype will receive a subdirectory with its
+                            enrichment results files. Note, in this case the files will *not* be assembled, and any non-Ecotype-contributing cell-type and state will
+                            not be analysed.
+    -n, --notebook        Generate a jupyter notebook to analyse the enrichment results. If this option is specified, then the <intput> argument is interpreted as
+                            the filename of the notebook to generate. By specifying '-' as filename a default filename with the dataset name is used.
     --notebook_config NOTEBOOK_CONFIG
-                            The configuration file for notebook generation. This
-                            is required for the notebook to be generated.
-    --organism ORGANISM   Set the reference organism. By default the organism is
-                            set to 'human'.
-    --size SIZE SIZE      [prerank only] Set the minimum and maximum number of
-                            gene matches for the reference gene sets and the data.
-                            By default 5 and 500 are used. Note, this will require
-                            a two number input for min and max.
+                            The configuration file for notebook generation. This is required for the notebook to be generated.
+    --organism ORGANISM   Set the reference organism. By default the organism is set to 'human'.
+    --size SIZE SIZE      [prerank only] Set the minimum and maximum number of gene matches for the reference gene sets and the data. By default 5 and 500 are used.
+                            Note, this will require a two number input for min and max.
     --permutations PERMUTATIONS
-                            [prerank only] Set the number of permutations to use
-                            for the prerank analysis. By default 1000 is used.
+                            [prerank only] Set the number of permutations to use for the prerank analysis. By default 1000 is used.
 
 
 Jupyter Notebook
