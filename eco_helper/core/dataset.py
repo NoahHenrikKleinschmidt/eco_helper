@@ -20,15 +20,19 @@ class Dataset:
     """
     def __init__(self, annotation : (str or pd.DataFrame), expression : (str or pd.DataFrame) ): 
         if isinstance(annotation, str):
+            self._annotation_file = annotation
             self.annotation = read_anotation(annotation)
         elif isinstance(annotation, pd.DataFrame):
+            self._annotation_file = "data"
             self.annotation = annotation
         else:
             raise TypeError("annotation must be a filename or a pandas DataFrame")
         
         if isinstance(expression, str):
+            self._expression_file = expression
             self.expression = read_expression(expression)
         elif isinstance(expression, pd.DataFrame):
+            self._expression_file = "data"
             self.expression = expression
         else:
             raise TypeError("expression must be a filename or a pandas DataFrame")
@@ -45,8 +49,10 @@ class Dataset:
             The filename of the expression matrix file.
         """
         if annotation is None:
+            annotation = self._annotation_file
             self.annotation = read_anotation(annotation)
         if expression is None:
+            expression = self._expression_file
             self.expression = read_expression(expression)
 
     def write( self, annotation : str = None, expression : str = None ):
@@ -61,9 +67,12 @@ class Dataset:
             The filename of the expression matrix file.
         """
         if annotation is None:
-            self.annotation.to_csv(annotation, sep='\t')
+            annotation = self._annotation_file
         if expression is None:
-            self.expression.to_csv(expression, sep='\t')
+            expression = self._expression_file
+            
+        self.annotation.to_csv(annotation, sep='\t')
+        self.expression.to_csv(expression, sep='\t')
 
 def read_anotation( filename : str ):
     """
