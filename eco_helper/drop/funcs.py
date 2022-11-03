@@ -20,7 +20,7 @@ def drop_samples( dataset : ds.Dataset, samples : list ) -> ds.Dataset:
     Dataset
         The dataset with the cropped dataset.
     """
-    return _drop_from_col(dataset, samples, "Sample")
+    return drop_from_col(dataset, samples, "Sample")
 
 def drop_celltypes( dataset : ds.Dataset, celltypes : list ) -> ds.Dataset:
     """
@@ -38,7 +38,7 @@ def drop_celltypes( dataset : ds.Dataset, celltypes : list ) -> ds.Dataset:
     Dataset
         The dataset with the cropped dataset.
     """
-    return _drop_from_col(dataset, celltypes, "CellType")
+    return drop_from_col(dataset, celltypes, "CellType")
 
 def drop_ids( dataset : ds.Dataset, ids : list ) -> ds.Dataset:
     """
@@ -56,9 +56,9 @@ def drop_ids( dataset : ds.Dataset, ids : list ) -> ds.Dataset:
     Dataset
         The dataset with the cropped dataset.
     """
-    return _drop_from_col(dataset, ids, "ID")
+    return drop_from_col(dataset, ids, "ID")
 
-def _drop_from_col( dataset : ds.Dataset, values : list, col : str ) -> ds.Dataset:
+def drop_from_col( dataset : ds.Dataset, values : list, col : str ) -> ds.Dataset:
     """
     Drop entries from the dataset using some column.
 
