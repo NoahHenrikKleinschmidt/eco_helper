@@ -39,6 +39,7 @@ def enrich_func( args ):
 
     import os
     import eco_helper.enrich.notebook as notebook
+    import eco_helper.enrich.funcs as funcs
     from eco_helper.enrich.cli_aux import _enrich_all, _enrich_ecotypes
 
     # Because the notebook itself can call eco_helper enrich we will not call
@@ -101,71 +102,3 @@ def enrich_func( args ):
             _enrich_all( gene_sets_dir, args )
         else:
             _enrich_ecotypes( gene_sets_dir, args )    
-
-def _enrich_all( gene_sets_dir, args ):
-    """
-    Perform enrichment analysis on all cell-types and states.
-
-    Parameters
-    ----------
-    gene_sets_dir : str
-        The directory containing the gene sets.
-    """
-    if args.enrichr: 
-        funcs.enrichr( 
-                        directory = gene_sets_dir, 
-                        outdir = args.output, 
-                        gene_sets = args.gene_sets, 
-                        organism = args.organism 
-                    )
-        if args.assemble:
-            cell_types = core.CellTypeCollection( args.input )
-            funcs.assemble_enrichr_results( directory = args.output, cell_types = cell_types, remove_raw = True )
-
-    if args.prerank:
-        funcs.prerank( 
-                        directory = gene_sets_dir, 
-                        outdir = args.output, 
-                        gene_sets = args.gene_sets, 
-                        organism = args.organism,
-                        min_size = args.size[0],
-                        max_size = args.size[1],
-                        permutations = args.permutations
-                    )
-        if args.assemble:
-            cell_types = core.CellTypeCollection( args.input )
-            funcs.assemble_prerank_results( directory = args.output, cell_types = cell_types, remove_raw = True )
-
-
-def _enrich_ecotypes( gene_sets_dir, args ):
-    """
-    Perform enrichment analysis only on Ecotype-contributing cell-types and states.
-
-    Parameters
-    ----------
-    gene_sets_dir : str
-        The directory containing the gene sets.
-    """
-    
-    ecotypes = core.EcotypeCollection( args.input )
-
-    if args.enrichr:
-        funcs.enrichr_ecotypes( 
-                                directory = gene_sets_dir, 
-                                outdir = args.output, 
-                                ecotypes = ecotypes,
-                                gene_sets = args.gene_sets, 
-                                organism = args.organism 
-                            )
-
-    if args.prerank:
-        funcs.prerank_ecotypes( 
-                                directory = gene_sets_dir, 
-                                outdir = args.output, 
-                                ecotypes = ecotypes,
-                                gene_sets = args.gene_sets, 
-                                organism = args.organism,
-                                min_size = args.size[0],
-                                max_size = args.size[1],
-                                permutations = args.permutations
-                            )
