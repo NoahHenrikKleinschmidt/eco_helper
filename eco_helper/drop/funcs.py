@@ -86,7 +86,8 @@ def drop_from_col( dataset : ds.Dataset, values : list, col : str ) -> ds.Datase
 
     values = list(values)
 
-    get_ids = lambda mask: annotation[mask].index.values 
+    get_ids = lambda mask: annotation[mask].index.values.tolist()
+
     if col == "ID" and "ID" not in annotation.columns:
         mask = lambda values: annotation.index.isin(values)
     else:
@@ -94,12 +95,12 @@ def drop_from_col( dataset : ds.Dataset, values : list, col : str ) -> ds.Datase
 
     # drop entries from annotation
     drop_mask = mask(values)
-    ids_to_drop = get_ids(drop_mask)
-
+    ids_to_drop = list( id for id in get_ids(drop_mask) if id in expression.columns ) 
+    
     annotation = annotation[ ~drop_mask ]
 
-    # drop entries from expression
-    expression = expression.drop( list(ids_to_drop), axis=1 )
+    # drop entries from expression  
+    expression.drop( ids_to_drop, axis=1, inplace = True )
 
     return ds.Dataset(annotation, expression)
 
