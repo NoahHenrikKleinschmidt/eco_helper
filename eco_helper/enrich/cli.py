@@ -51,15 +51,21 @@ def enrich_func( args ):
             raise ValueError( "A notebook configuration file is required for notebook generation." )
 
         nb = notebook.EnrichmentNotebook( config = args.notebook_config )
+
+        # run the notebook to ensure we get enrichment results
+        print( "Pre-running notebook to ensure enrichment results are generated..." )
+        nb.execute( args.input )
+
         if nb._enrichment_categories: 
             if nb._enrichr:
                 nb.analyse_results( "enrichr" )
             if nb._prerank:
                 nb.analyse_results( "prerank" )
         
-        print( "Running notebook..." )
+        print( "Pre-running the notebook to screen enrichment results..." )
         nb.execute( args.input )
-        print( "Done." )
+
+        print( f"All Done! Notebook '{args.input}' is ready" )
     
     else:
 

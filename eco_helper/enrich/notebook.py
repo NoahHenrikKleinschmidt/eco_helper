@@ -563,6 +563,8 @@ fig.show()
         # get the topmost df subset
         topmost = scatter.df.sort_values( x, ascending = False ) 
         topmost = topmost.head( int( len(topmost) * self._topmost ) )
+        topmost = scatter.df.sort_values( y, ascending = False )
+        topmost = topmost.head( int( len(topmost) * self._topmost ) )
         category_counts = topmost.loc[ :,"__hue__" ].value_counts()
 
         # now get the categories to keep for that celltype
