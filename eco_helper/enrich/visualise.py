@@ -569,7 +569,7 @@ class StateScatterplot:
         y_threshold : float, optional
             The threshold for the y-axis. If provided, only gene sets with y-axis values above this threshold are plotted.
         """
-        df = self._prep_gene_set_df( x, y, ref_col, size, subsets, n, x_threshold, y_threshold )
+        df = self._prep_gene_set_df( x, y, ref_col, subsets, n, x_threshold, y_threshold )
         xlabel = kwargs.pop("xlabel", x)
         ylabel = kwargs.pop("ylabel", y)
         fig = px.scatter( df, x = x, y = y, color = "__hue__", size = size, labels = {"x" : xlabel, "y" : ylabel}, **kwargs )
@@ -602,7 +602,7 @@ class StateScatterplot:
         ax : matplotlib.Axes, optional
             The axes to plot on. If not provided, a new figure and axes are created.
         """
-        df = self._prep_gene_set_df( x, y, ref_col, size, subsets, n, x_threshold, y_threshold )
+        df = self._prep_gene_set_df( x, y, ref_col, subsets, n, x_threshold, y_threshold )
         if not ax:
             fig, ax = plt.subplots( figsize = kwargs.pop("figsize") )
 
