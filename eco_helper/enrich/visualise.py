@@ -289,6 +289,7 @@ class StateScatterplot:
         else:
             raise TypeError( "subsets must be a dict or a function" )
 
+        clear_hue = kwargs.pop( "clear_hue", True )
         x, y, title, xlabel, ylabel, style = self._get_kwargs( kwargs )  
 
         if backend == "matplotlib":
@@ -300,9 +301,73 @@ class StateScatterplot:
             hover_data = self._prep_hoverdata(ref_col, kwargs)
             fig = self._plotly_highlight(x, y, style, title, xlabel, ylabel, hover_data = hover_data, **kwargs)
 
-        self.df.drop( columns = ["__hue__"], inplace = True )
+        if clear_hue:
+            self.df.drop( columns = ["__hue__"], inplace = True )
 
         return fig 
+
+    def top_gene_sets( self, subsets : (dict or function) = None, ref_col : str = None, n : int = None, x_threshold : float = None, y_threshold : float = None, ax : plt.Axes = None, **kwargs ):
+        """
+        Highlight the topmost-enriched gene sets. This can be either globally or based on a reference column and a dictionary of subsets to highlight, showing the topmost gene sets for each subset highlighted terms in a colored scatterplot.
+
+        Note
+        ----
+        The `other` subset fading is only available in the `matplotlib` backend.
+        In `plotly` backend `other` is just another regular subset. 
+        However, in this case the subset can simply be turned off in the legend.
+
+        Parameters
+        ----------
+        subsets : dict or function
+            The dictionary of subsets to highlight. 
+            This requires strings as keys and lists of regex patterns of associated terms as values.
+            In case a function is provided, this function may take exactly one argument (the dataframe) 
+            and must return an array-like object suitable as a new dataframe column on which to base the highlighting.
+        ref_col : str
+            The reference column of the dataframe. This is only required if a dictionary of subsets is provided.
+        n : int
+            The number of top gene sets to highlight. If this is provided, then the threshold arguments are ignored.
+        x_threshold : float
+            The threshold for the x-axis. Only gene sets with an x-axis value above this threshold will be highlighted.
+        y_threshold : float
+            The threshold for the y-axis. Only gene sets with an y-axis value above this threshold will be highlighted.
+        ax : plt.Axes
+            The subplot in which to plot. By default a new figure is being created.
+            This is ignored in `plotly` backend.
+        **kwargs
+            Additional keyword arguments.
+        
+        Returns
+        -------
+        fig : matplotlib.figure.Figure or plotly.graph_objs.Figure
+            The figure object.
+        """
+        if isinstance( subsets, dict ):
+            if ref_col is None:
+                raise ValueError( "Reference column must be provided if dictionary of subsets is provided." )
+            self._highlight( ref_col, subsets )
+
+        elif callable( subsets ):
+            self.df["__hue__"] = subsets( self.df )
+
+        else:
+            raise TypeError( "subsets must be a dict or a function" )
+
+        clear_hue = kwargs.pop( "clear_hue", True )
+        x, y, title, xlabel, ylabel, style = self._get_kwargs( kwargs )  
+
+        if backend == "matplotlib":
+            
+            fig = self._matplotlib_top_gene_sets( n, x_threshold, y_threshold, ax, x, y, title, xlabel = xlabel, ylabel = ylabel, **kwargs)
+        
+        elif backend == "plotly":
+
+            fig = self._plotly_top_gene_sets( x, y, n, x_threshold, y_threshold, xlabel = xlabel, ylabel = ylabel, **kwargs)
+
+        if clear_hue:
+            self.df.drop( columns = ["__hue__"], inplace = True )
+        return fig
+
 
     def _prep_hoverdata(self, ref_col, kwargs):
         """
@@ -480,6 +545,124 @@ class StateScatterplot:
 
         return counts
 
+    def _plotly_top_gene_sets(self, x, y, ref_col, size = None, subsets = None, n : int = None, x_threshold : float = None, y_threshold : float = None, **kwargs):
+        """
+        Plot the top enriched gene sets
+
+        Parameters
+        ----------
+        x : str
+            The column to plot on the x-axis.
+        y : str
+            The column to plot on the y-axis.
+        ref_col : str
+            The reference column of the dataframe.
+        size : str, optional
+            The column to use for the size of the points.
+        subsets : dict, optional
+            The dictionary of subsets to highlight.
+        n : int, optional
+            The number of gene sets to plot. This is either enterpreted as _per subset_ or total if no subsets are provided.
+            If this is provided, then the `x_threshold` and `y_threshold` are ignored.
+        x_threshold : float, optional
+            The threshold for the x-axis. If provided, only gene sets with x-axis values above this threshold are plotted.
+        y_threshold : float, optional
+            The threshold for the y-axis. If provided, only gene sets with y-axis values above this threshold are plotted.
+        """
+        df = self._prep_gene_set_df( x, y, ref_col, subsets, n, x_threshold, y_threshold )
+        xlabel = kwargs.pop("xlabel", x)
+        ylabel = kwargs.pop("ylabel", y)
+        fig = px.scatter( df, x = x, y = y, color = "__hue__", size = size, labels = {"x" : xlabel, "y" : ylabel}, **kwargs )
+        fig.update_layout( legend = dict( title = "Subset") )
+        return fig
+
+    def _matplotlib_top_gene_sets(self, x, y, ref_col, size = None, subsets = None, n : int = None, x_threshold : float = None, y_threshold : float = None, ax = None, **kwargs):
+        """
+        Plot the top enriched gene sets
+
+        Parameters
+        ----------
+        x : str
+            The column to plot on the x-axis.
+        y : str
+            The column to plot on the y-axis.
+        ref_col : str
+            The reference column of the dataframe.
+        size : str, optional
+            The column to use for the size of the points.
+        subsets : dict, optional
+            The dictionary of subsets to highlight.
+        n : int, optional
+            The number of gene sets to plot. This is either enterpreted as _per subset_ or total if no subsets are provided.
+            If this is provided, then the `x_threshold` and `y_threshold` are ignored.
+        x_threshold : float, optional
+            The threshold for the x-axis. If provided, only gene sets with x-axis values above this threshold are plotted.
+        y_threshold : float, optional
+            The threshold for the y-axis. If provided, only gene sets with y-axis values above this threshold are plotted.
+        ax : matplotlib.Axes, optional
+            The axes to plot on. If not provided, a new figure and axes are created.
+        """
+        df = self._prep_gene_set_df( x, y, ref_col, subsets, n, x_threshold, y_threshold )
+        if not ax:
+            fig, ax = plt.subplots( figsize = kwargs.pop("figsize") )
+
+        xlabel = kwargs.pop("xlabel", x)
+        ylabel = kwargs.pop("ylabel", "")
+
+        ax.grid( True, axis = "both" )
+        sns.scatterplot( data = df, x = x, y = y, hue = "__hue__", size = size, ax = ax, )
+        ax.set( xlabel = xlabel, ylabel = ylabel )
+        ax.legend( bbox_to_anchor = (1, 1), frameon = False )
+        ax.invert_yaxis()
+        return fig
+
+    def _prep_gene_set_df( self, x : str, y : str, ref_col : str = None, subsets : dict = None, n : int = None, x_threshold : float = None, y_threshold : float = None):
+        """
+        Prepares a top-most dataframe to view enriched gene sets.
+
+        Parameters
+        ----------
+        x : str
+            The x-axis column
+        y : str
+            The y-axis column
+        subsets : dict
+            The dictionary of subsets to highlight.
+        ref_col : str
+            The reference column of the dataframe.
+        n : int
+            The number of gene sets to plot. This is either enterpreted as _per subset_ or total if no subsets are provided.
+            If this is provided, then the `x_threshold` and `y_threshold` are ignored.
+        x_threshold : float
+            The threshold for the x-axis. If provided, only gene sets with x-axis values above this threshold are plotted.
+        y_threshold : float
+            The threshold for the y-axis. If provided, only gene sets with y-axis values above this threshold are plotted.
+        
+        Returns
+        -------
+        df : pd.DataFrame
+            The dataframe with the top-most enriched gene sets.
+        """
+        if subsets:
+            if isinstance(subsets, dict):
+                self._highlight( ref_col = ref_col, subsets = subsets )
+            elif callable(subsets):
+                self.df["__hue__"] = subsets( self.df[ref_col] )
+            else:
+                raise ValueError( "The `subsets` argument must be a dictionary or a callable function." )
+            
+        if n:
+            if "__hue__" in self.df.columns:
+                groups = self.df.groupby( "__hue__" )
+                df = pd.concat( [group.sort_values( x, ascending = False ).head( n ) for _, group in groups] )
+            else:
+                df = self.df.sort_values( x, ascending = False ).head( n )
+        else:
+            df = self.df.query( f"`{x}` >= {x_threshold} and `{y}` >= {y_threshold}" )
+        
+        df = df.sort_values( x, ascending = True )
+        return df
+
     @staticmethod
     def _count_subsets( df ):
         """
@@ -638,6 +821,7 @@ def _matplotlib_collection_scatterplot(collection, x, y, hue, style, **kwargs):
     nrows, ncols = make_layout_from_list( list(collection.keys()) )
     fig, axs = plt.subplots( nrows, ncols, figsize = kwargs.pop( "figsize", (ncols * 4, nrows * 4) ), dpi = kwargs.pop( "dpi", 300 ) )
 
+    pad = kwargs.pop( "padding", None )
     xlabel = kwargs.pop( "xlabel", x )
     ylabel = kwargs.pop( "ylabel", y )
 
@@ -649,4 +833,7 @@ def _matplotlib_collection_scatterplot(collection, x, y, hue, style, **kwargs):
                 ylabel = ylabel )
 
         ax.legend( bbox_to_anchor = (1.01, 1), loc = 2, borderaxespad = 0., frameon = False, facecolor = None )
+    
+    if pad is not None:
+        fig.tight_layout( pad = pad )
     return fig
