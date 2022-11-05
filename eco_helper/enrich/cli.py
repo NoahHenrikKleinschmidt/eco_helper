@@ -38,11 +38,10 @@ def enrich_func( args ):
         The arguments passed to the command line.
     """
 
-    import os, warnings
+    import os
     import eco_helper.enrich.notebook as notebook
     import eco_helper.enrich.funcs as funcs
-    import eco_helper.enrich.EnrichmentCollection as col
-    from eco_helper.enrich.cli_aux import _enrich_all, _enrich_ecotypes
+    from eco_helper.enrich.cli_aux import _enrich_all, _enrich_ecotypes, _read_from_config, pickle_notebook, pickle
 
     # Because the notebook itself can call eco_helper enrich we will not call
     # anything else but let the notebook handle everything...
@@ -72,27 +71,17 @@ def enrich_func( args ):
         nb.execute( args.input )
 
         print( f"All Done! Notebook '{nb._filename}' is ready" )
-    
+
         if args.pickle:
-            data_dir, resolution, which, outdir = _read_from_config( args.notebook_config )
-            if resolution == "ecotypes":
-                warnings.warn( "Pickle export is only supported for EcoType-resolution collection" )
-                return
-
-            filename = args.input.replace("ipynb", "") + ".pkl"
-
-            if which[0]:
-                collection = col.EnrichmentCollection( data_dir, resolution, "enrichr" )
-                collection.save(  )
-            if which[1]:
-                collection = col.EnrichmentCollection( data_dir, resolution, "prerank" )
-                collection.save( filename )
-            
+            print( "Exporting a pickle file" )
+            pickle_notebook( args )
 
     else:
 
-        if not args.gene_sets: 
-            raise ValueError( "No gene sets were specified." )
+        # now we can run the enrichment analysis
+        if not args.enrichr and not args.prerank:
+            print( "No analysis selected! You must specify the --prerank and/or --enrichr option." )
+            return
 
         # make sure we have a valid output directory
         if args.output is None:
@@ -100,9 +89,23 @@ def enrich_func( args ):
             name = os.path.basename( args.input )
             args.output = os.path.join( parent, f"{name}_{settings.gseapy_outdir}" )
 
+
+        if os.path.exists( args.output ):
+            if args.pickle:
+                try:
+                    print( "Existing results found, exporting a pickle file and exiting" )
+                    pickle( args ) 
+                    return 
+                except:
+                    print( "Existing results found, but could not export a pickle file. Recomputing..." )
+
+        if not args.gene_sets: 
+            print( "No gene sets were specified." )
+            return
+
         if not os.path.exists( args.output ):
             os.makedirs( args.output, exist_ok = True )
-        
+
         # make a gene_sets directory in the output directory
         gene_sets_dir = os.path.join( args.output, settings.gene_sets_outdir )
         if not os.path.exists( gene_sets_dir ):
@@ -111,37 +114,11 @@ def enrich_func( args ):
         # start by getting the gene sets
         funcs.collect_gene_sets( directory = args.input, outdir = gene_sets_dir, enrichr = args.enrichr, prerank = args.prerank )
 
-        # now we can run the enrichment analysis
-        if not args.enrichr and not args.prerank:
-            print( "No analysis selected! You must specify the --prerank and/or --enrichr option." )
-            return
-
         if not args.ecotypes: 
             _enrich_all( gene_sets_dir, args )
         else:
             _enrich_ecotypes( gene_sets_dir, args )    
 
         if args.pickle:
-            if not args.ecotypes:
-                warnings.warn( "Pickle export is only supported for EcoType-resolution collection" )
-                return
-
-            if args.enrichr:
-                collection = col.EnrichmentCollection( args.input, "ecotype", "enrichr" )
-                collection.save( os.path.join( args.output, "enrichr.pkl" ) )
-            if args.prerank:
-                collection = col.EnrichmentCollection( args.input, "ecotype", "prerank" )
-                collection.save( os.path.join( args.output, "prerank.pkl" ) )
-
-
-def _read_from_config( config ):
-    """ Read the output directory from the config file. """
-    import yaml
-    config = yaml.load( open( config, "r" ), Loader = yaml.SafeLoader )
-    parent = config["directories"].get("parent")
-    data_dir = config["directories"].get("ecotyper_dir").format(parent=parent)
-    resolution = config["enrichment"].get("ecotype_resolution")
-    enrichr = config["enrichment"].get("enrichr")
-    prerank = config["enrichment"].get("prerank")
-    which = enrichr, prerank
-    return data_dir, resolution, which
+            print( "Exporting a pickle file" )
+            pickle( args ) 
