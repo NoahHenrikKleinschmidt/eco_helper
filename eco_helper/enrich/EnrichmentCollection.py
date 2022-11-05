@@ -42,6 +42,7 @@ Example
 """
 
 import os, glob, pickle
+import numpy as np
 import pandas as pd
 import eco_helper.core as core
 
@@ -130,6 +131,14 @@ class EnrichmentCollection:
                 self.data[ key ] = df
         else: 
             print( "In enrichr results, the `Term` column is already split..." )
+
+    def _compute_log( self, x = "Combined Score", y = "Adjusted P-value", log_x = "log2_score", log_y = "log10_qval" ):
+        """
+        Compute the log2 and -log10 of the `Combined Score` and `Adjusted P-value` columns, respectively.
+        """
+        for i in self.keys():
+            self[ i ][ log_x ] = np.log2( self[ i ][ x ] ) 
+            self[ i ][ log_y ] = -np.log10( self[ i ][ y ] )
 
     def _load_celltype( self ):
         """

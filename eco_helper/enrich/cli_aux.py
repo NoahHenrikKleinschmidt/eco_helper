@@ -122,11 +122,13 @@ def pickle_notebook( args ):
 
     if which[0]:
         collection = col( data_dir, "ecotype", "enrichr" )
+        collection._compute_log( "Combined Score", "Combined P-value" )
         collection.save( filename.format(which = "enrichr") )
         print( "Enrichr collection saved to: {}".format( filename.format(which = "enrichr") ) )
 
     if which[1]:
         collection = col( data_dir, "ecotype", "prerank" )
+        collection._compute_log( "NES", "FWER p-val" )
         collection.save( filename.format(which = "prerank") )
         print( "Prerank collection saved to: {}".format( filename.format(which = "prerank") ) )
    
@@ -141,10 +143,12 @@ def pickle( args ):
 
     if args.enrichr:
         collection = col( args.output, "ecotype", "enrichr" )
+        collection._compute_log( "Combined Score", "Combined P-value" )
         collection.save( os.path.join( args.output, "enrichr.pkl" ) )
         print( "Enrichr collection saved to: {}".format( os.path.join( args.output, "enrichr.pkl" ) ) )
 
     if args.prerank:
         collection = col( args.output, "ecotype", "prerank" )
+        collection._compute_log( "NES", "FWER p-val" )
         collection.save( os.path.join( args.output, "prerank.pkl" ) )  
         print( "Prerank collection saved to: {}".format( os.path.join( args.output, "prerank.pkl" ) ) )

@@ -41,7 +41,7 @@ def enrich_func( args ):
     import os
     import eco_helper.enrich.notebook as notebook
     import eco_helper.enrich.funcs as funcs
-    from eco_helper.enrich.cli_aux import _enrich_all, _enrich_ecotypes, _read_from_config, pickle_notebook, pickle
+    from eco_helper.enrich.cli_aux import _enrich_all, _enrich_ecotypes, pickle_notebook, pickle
 
     # Because the notebook itself can call eco_helper enrich we will not call
     # anything else but let the notebook handle everything...
