@@ -306,7 +306,7 @@ class StateScatterplot:
 
         return fig 
 
-    def top_gene_sets( self, subsets : (dict or function) = None, ref_col : str = None, n : int = None, x_threshold : float = None, y_threshold : float = None, ax : plt.Axes = None, **kwargs ):
+    def top_gene_sets( self, subsets : (dict or function) = None, ref_col : str = None, n : int = None, x_threshold : float = None, y_threshold : float = None,  x : str = None, y : str = None, size : str = None, hue : str = None, ax : plt.Axes = None, **kwargs ):
         """
         Highlight the topmost-enriched gene sets. This can be either globally or based on a reference column and a dictionary of subsets to highlight, showing the topmost gene sets for each subset highlighted terms in a colored scatterplot.
 
@@ -342,29 +342,17 @@ class StateScatterplot:
         fig : matplotlib.figure.Figure or plotly.graph_objs.Figure
             The figure object.
         """
-        if isinstance( subsets, dict ):
-            if ref_col is None:
-                raise ValueError( "Reference column must be provided if dictionary of subsets is provided." )
-            self._highlight( ref_col, subsets )
-
-        elif callable( subsets ):
-            self.df["__hue__"] = subsets( self.df )
-
-        else:
-            raise TypeError( "subsets must be a dict or a function" )
-
         clear_hue = kwargs.pop( "clear_hue", True )
-        x, y, title, xlabel, ylabel, style = self._get_kwargs( kwargs )  
+        x = kwargs.pop("x", self.x)
+        y = kwargs.pop("y", self.y)
 
         if backend == "matplotlib":
-            
-            fig = self._matplotlib_top_gene_sets( n, x_threshold, y_threshold, ax, x, y, title, xlabel = xlabel, ylabel = ylabel, **kwargs)
+            fig = self._matplotlib_top_gene_sets( x = x, y = y, ref_col = ref_col, subsets = subsets, n = n, x_threshold = x_threshold, y_threshold = y_threshold, **kwargs)
         
         elif backend == "plotly":
+            fig = self._plotly_top_gene_sets( x = x, y = y, ref_col = ref_col, subsets = subsets, n = n, x_threshold = x_threshold, y_threshold = y_threshold, **kwargs)
 
-            fig = self._plotly_top_gene_sets( x, y, n, x_threshold, y_threshold, xlabel = xlabel, ylabel = ylabel, **kwargs)
-
-        if clear_hue:
+        if clear_hue and "__hue__" in self.df.columns:
             self.df.drop( columns = ["__hue__"], inplace = True )
         return fig
 
@@ -552,9 +540,9 @@ class StateScatterplot:
         Parameters
         ----------
         x : str
-            The column to plot on the x-axis.
+            The column to plot on the x-axis (for plotting and thresholding).
         y : str
-            The column to plot on the y-axis.
+            The column to plot on the y-axis (for thresholding).
         ref_col : str
             The reference column of the dataframe.
         size : str, optional
@@ -569,10 +557,14 @@ class StateScatterplot:
         y_threshold : float, optional
             The threshold for the y-axis. If provided, only gene sets with y-axis values above this threshold are plotted.
         """
-        df = self._prep_gene_set_df( x, y, ref_col, subsets, n, x_threshold, y_threshold )
+        df = self._prep_gene_set_df( x = x, y = y, ref_col = ref_col, subsets = subsets, n = n, x_threshold = x_threshold, y_threshold = y_threshold )
         xlabel = kwargs.pop("xlabel", x)
         ylabel = kwargs.pop("ylabel", y)
-        fig = px.scatter( df, x = x, y = y, color = "__hue__", size = size, labels = {"x" : xlabel, "y" : ylabel}, **kwargs )
+        if "__hue__" in df.columns:
+            hue = "__hue__"
+        else:
+            hue = kwargs.pop("hue", None)
+        fig = px.scatter( df, x = x, y = ref_col, color = hue, size = y, labels = {"x" : xlabel, "y" : ylabel}, **kwargs )
         fig.update_layout( legend = dict( title = "Subset") )
         return fig
 
@@ -583,9 +575,9 @@ class StateScatterplot:
         Parameters
         ----------
         x : str
-            The column to plot on the x-axis.
+            The column to plot on the x-axis (for plotting and thresholding).
         y : str
-            The column to plot on the y-axis.
+            The column to plot on the y-axis (for thresholding).
         ref_col : str
             The reference column of the dataframe.
         size : str, optional
@@ -602,15 +594,19 @@ class StateScatterplot:
         ax : matplotlib.Axes, optional
             The axes to plot on. If not provided, a new figure and axes are created.
         """
-        df = self._prep_gene_set_df( x, y, ref_col, subsets, n, x_threshold, y_threshold )
+        df = self._prep_gene_set_df( x = x, y = y, ref_col = ref_col, subsets = subsets, n = n, x_threshold = x_threshold, y_threshold = y_threshold )
         if not ax:
-            fig, ax = plt.subplots( figsize = kwargs.pop("figsize") )
+            fig, ax = plt.subplots( figsize = kwargs.pop("figsize", None) )
 
         xlabel = kwargs.pop("xlabel", x)
         ylabel = kwargs.pop("ylabel", "")
-
+        if "__hue__" in df.columns:
+            hue = "__hue__"
+        else:
+            hue = kwargs.pop("hue", None)
+        
         ax.grid( True, axis = "both" )
-        sns.scatterplot( data = df, x = x, y = y, hue = "__hue__", size = size, ax = ax, )
+        sns.scatterplot( data = df, x = x, y = ref_col, hue = hue, size = y, ax = ax, **kwargs )
         ax.set( xlabel = xlabel, ylabel = ylabel )
         ax.legend( bbox_to_anchor = (1, 1), frameon = False )
         ax.invert_yaxis()
