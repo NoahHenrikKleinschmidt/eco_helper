@@ -128,9 +128,12 @@ def enrich_func( args ):
 
             if args.enrichr:
                 collection = col.EnrichmentCollection( args.input, "ecotype", "enrichr" )
+                collection._compute_log( "Combined Score", "Combined P-value" )
                 collection.save( os.path.join( args.output, "enrichr.pkl" ) )
+
             if args.prerank:
                 collection = col.EnrichmentCollection( args.input, "ecotype", "prerank" )
+                collection._compute_log( "NES", "FWER p-val" )
                 collection.save( os.path.join( args.output, "prerank.pkl" ) )
 
 
