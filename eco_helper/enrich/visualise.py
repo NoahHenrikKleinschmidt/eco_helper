@@ -533,7 +533,7 @@ class StateScatterplot:
 
         return counts
 
-    def _plotly_top_gene_sets(self, x, y, ref_col, size = None, subsets = None, n : int = None, x_threshold : float = None, y_threshold : float = None, **kwargs):
+    def _plotly_top_gene_sets(self, x, y, ref_col, subsets = None, n : int = None, x_threshold : float = None, y_threshold : float = None, **kwargs):
         """
         Plot the top enriched gene sets
 
@@ -545,8 +545,6 @@ class StateScatterplot:
             The column to plot on the y-axis (for thresholding).
         ref_col : str
             The reference column of the dataframe.
-        size : str, optional
-            The column to use for the size of the points.
         subsets : dict, optional
             The dictionary of subsets to highlight.
         n : int, optional
@@ -568,7 +566,7 @@ class StateScatterplot:
         fig.update_layout( legend = dict( title = "Subset") )
         return fig
 
-    def _matplotlib_top_gene_sets(self, x, y, ref_col, size = None, subsets = None, n : int = None, x_threshold : float = None, y_threshold : float = None, ax = None, **kwargs):
+    def _matplotlib_top_gene_sets(self, x, y, ref_col, subsets = None, n : int = None, x_threshold : float = None, y_threshold : float = None, ax = None, **kwargs):
         """
         Plot the top enriched gene sets
 
@@ -580,8 +578,6 @@ class StateScatterplot:
             The column to plot on the y-axis (for thresholding).
         ref_col : str
             The reference column of the dataframe.
-        size : str, optional
-            The column to use for the size of the points.
         subsets : dict, optional
             The dictionary of subsets to highlight.
         n : int, optional
@@ -600,6 +596,7 @@ class StateScatterplot:
 
         xlabel = kwargs.pop("xlabel", x)
         ylabel = kwargs.pop("ylabel", "")
+        title = kwargs.pop("title", None)
         if "__hue__" in df.columns:
             hue = "__hue__"
         else:
@@ -607,7 +604,7 @@ class StateScatterplot:
         
         ax.grid( True, axis = "both" )
         sns.scatterplot( data = df, x = x, y = ref_col, hue = hue, size = y, ax = ax, **kwargs )
-        ax.set( xlabel = xlabel, ylabel = ylabel )
+        ax.set( xlabel = xlabel, ylabel = ylabel, title = title )
         ax.legend( bbox_to_anchor = (1, 1), frameon = False )
         ax.invert_yaxis()
         return fig

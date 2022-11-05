@@ -96,8 +96,9 @@ def enrich_func( args ):
                     print( "Existing results found, exporting a pickle file and exiting" )
                     pickle( args ) 
                     return 
-                except:
+                except Exception as e:
                     print( "Existing results found, but could not export a pickle file. Recomputing..." )
+                    # print( f"Failed to export pickle file: {e}" )
 
         if not args.gene_sets: 
             print( "No gene sets were specified." )
