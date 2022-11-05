@@ -41,7 +41,7 @@ Example
 
 """
 
-import os, glob
+import os, glob, pickle
 import pandas as pd
 import eco_helper.core as core
 
@@ -102,7 +102,19 @@ class EnrichmentCollection:
                             "ecotype": self._load_ecotype
                         }
         loading_func[ self.resolution ]()
-        
+
+    def save( self, filename : str ):
+        """
+        Save the enrichment as a pickle file.
+
+        Parameters
+        ----------
+        filename : str
+            The name of the pickle file.
+        """
+        with open( filename, "wb" ) as f:
+            pickle.dump( self, f )
+
     def split_terms( self ):
         """
         Split the `Term` column into `Term` and `Gene_set` columns.

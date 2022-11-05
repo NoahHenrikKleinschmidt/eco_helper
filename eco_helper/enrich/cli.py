@@ -18,6 +18,7 @@ def setup_parser( parent ):
     enrich.add_argument( "-E", "--ecotypes", help = "Use this to only analyse cell-types and states contributing to Ecotypes. In this case each Ecotype will receive a subdirectory with its enrichment results files. Note, in this case the files will *not* be assembled, and any non-Ecotype-contributing cell-type and state will not be analysed.", action = "store_true" )
     enrich.add_argument( "-n", "--notebook", help = "Generate a jupyter notebook to analyse the enrichment results. If this option is specified, then the <intput> argument is interpreted as the filename of the notebook to generate. By specifying '-' as filename a default filename with the dataset name is used.", action = "store_true", default = None )
     enrich.add_argument( "--notebook_config", help = "The configuration file for notebook generation. This is required for the notebook to be generated.", default = None )
+    enrich.add_argument( "--pickle", help = "Export a pickle file of the enrichment results as an EnrichmentCollection. This can be used in the web-viewer to further inspect the enrichment results.", action = "store_true", default = None )
     enrich.add_argument( "--organism", help = "Set the reference organism. By default the organism is set to 'human'.", default = "human" )
     enrich.add_argument( "--size", help = "[prerank only] Set the minimum and maximum number of gene matches for the reference gene sets and the data. By default 5 and 500 are used. Note, this will require a two number input for min and max.", type = int, nargs = 2, default = [5, 500] )
     enrich.add_argument( "--permutations", help = "[prerank only] Set the number of permutations to use for the prerank analysis. By default 1000 is used.", type = int, default = 1000 )
@@ -37,9 +38,10 @@ def enrich_func( args ):
         The arguments passed to the command line.
     """
 
-    import os
+    import os, warnings
     import eco_helper.enrich.notebook as notebook
     import eco_helper.enrich.funcs as funcs
+    import eco_helper.enrich.EnrichmentCollection as col
     from eco_helper.enrich.cli_aux import _enrich_all, _enrich_ecotypes
 
     # Because the notebook itself can call eco_helper enrich we will not call
@@ -71,6 +73,22 @@ def enrich_func( args ):
 
         print( f"All Done! Notebook '{nb._filename}' is ready" )
     
+        if args.pickle:
+            data_dir, resolution, which, outdir = _read_from_config( args.notebook_config )
+            if resolution == "ecotypes":
+                warnings.warn( "Pickle export is only supported for EcoType-resolution collection" )
+                return
+
+            filename = args.input.replace("ipynb", "") + ".pkl"
+
+            if which[0]:
+                collection = col.EnrichmentCollection( data_dir, resolution, "enrichr" )
+                collection.save(  )
+            if which[1]:
+                collection = col.EnrichmentCollection( data_dir, resolution, "prerank" )
+                collection.save( filename )
+            
+
     else:
 
         if not args.gene_sets: 
@@ -102,3 +120,28 @@ def enrich_func( args ):
             _enrich_all( gene_sets_dir, args )
         else:
             _enrich_ecotypes( gene_sets_dir, args )    
+
+        if args.pickle:
+            if not args.ecotypes:
+                warnings.warn( "Pickle export is only supported for EcoType-resolution collection" )
+                return
+
+            if args.enrichr:
+                collection = col.EnrichmentCollection( args.input, "ecotype", "enrichr" )
+                collection.save( os.path.join( args.output, "enrichr.pkl" ) )
+            if args.prerank:
+                collection = col.EnrichmentCollection( args.input, "ecotype", "prerank" )
+                collection.save( os.path.join( args.output, "prerank.pkl" ) )
+
+
+def _read_from_config( config ):
+    """ Read the output directory from the config file. """
+    import yaml
+    config = yaml.load( open( config, "r" ), Loader = yaml.SafeLoader )
+    parent = config["directories"].get("parent")
+    data_dir = config["directories"].get("ecotyper_dir").format(parent=parent)
+    resolution = config["enrichment"].get("ecotype_resolution")
+    enrichr = config["enrichment"].get("enrichr")
+    prerank = config["enrichment"].get("prerank")
+    which = enrichr, prerank
+    return data_dir, resolution, which
