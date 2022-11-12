@@ -1,7 +1,8 @@
+<p align="center">
+<img src="docs/eco_helper.svg"/>
+</p>
 
-eco_helper
-==========
-
+------
 [![Documentation Status](https://readthedocs.org/projects/eco-helper/badge/?version=master)](https://eco-helper.readthedocs.io/en/master/?badge=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/eco_helper/badge)](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/eco_helper)
 
