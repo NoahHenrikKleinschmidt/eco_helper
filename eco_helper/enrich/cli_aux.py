@@ -116,7 +116,7 @@ def pickle_notebook( args ):
         return
 
     if args.input != "-":
-        filename = args.input.replace("ipynb", "") + ".pkl" 
+        filename = args.input.replace(".ipynb", "") + ".pkl" 
     else:
         filename = os.path.join( outdir, "{which}" + ".pkl" )
 
