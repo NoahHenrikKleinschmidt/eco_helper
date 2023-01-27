@@ -115,7 +115,7 @@ def pickle_notebook( args ):
         print( "Pickle export is only supported for EcoType-resolution collection" )
         return
 
-    if args.input != "-":
+    if args.input:
         filename = args.input.replace(".ipynb", "") + ".pkl" 
     else:
         filename = os.path.join( outdir, "{which}" + ".pkl" )
